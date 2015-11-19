@@ -14,11 +14,11 @@ A collection of apps written for the [Rubik's Futuro Cube](http://futurocube.com
 Apps are written in [PAWN](http://www.compuphase.com/pawn/pawn.htm), an embedded scripting language with C like syntax.  Checkout [FuturoCube.com/sdk](http://futurocube.com/sdk) for getting setup with the Futuro Cube SDK.  The .p files can be opened in a text editor like [Sublime](http://www.sublimetext.com/) or [NotePad++](https://notepad-plus-plus.org/).
 
 ###Steps to install scripts:
-1. Clone this Repo or download the scripts from the (compiled scripts)[https://github.com/KennethBrandon/Futuro-Cube-Apps/tree/master/compiled%20scripts] folder
+1. Clone this Repo or download the scripts from the [compiled scripts](compiled%20scripts) folder
 2.  Download and Install Rubik's Futuro Cube Suite
 3.  Click the Cube Manager button
 4.  Click the Directory Folder
-5.  Choose the (compiled scripts)[https://github.com/KennethBrandon/Futuro-Cube-Apps/tree/master/compiled%20scripts] folder
+5.  Choose the [compiled scripts](compiled%20scripts) folder
 6.  Drag the desired amx script files to the menu item you want
 7.  Click APPLY CHANGES
 
@@ -44,4 +44,4 @@ These apps were hacked in a couple days, years ago.  Expect ugly code.
 * [Kenneth Brandon](http://kennethbrandon.com) - Kenneth@KennethBrandon.com
 
 ##License
-See the [LICENSE](https://github.com/KennethBrandon/FuturoCube-Apps/blob/master/LICENSE.md) file for license rights and limitations (MIT).
+See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
