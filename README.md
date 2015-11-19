@@ -23,3 +23,6 @@ These apps were hacked in a couple days, years ago.  Expect ugly code.
 
 ##Contributor:
 * [Kenneth Brandon](http://kennethbrandon.com) - Kenneth@KennethBrandon.com
+
+##License
+See the [LICENSE](https://github.com/KennethBrandon/FuturoCube-Apps/blob/master/LICENSE.md) file for license rights and limitations (MIT).
