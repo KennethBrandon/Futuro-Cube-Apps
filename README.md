@@ -18,7 +18,7 @@ If you wanna contribute:
 * Make a Branch
 * Create a Pull Request
 
-##Disclamer
+##Disclaimer
 These apps were hacked in a couple days, years ago.  Expect ugly code.
 
 ##Contributor:
