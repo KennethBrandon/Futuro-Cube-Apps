@@ -10,7 +10,15 @@
 
 
 ## Getting Setup
-App are written in [PAWN](http://www.compuphase.com/pawn/pawn.htm), an embedded scripting language with C like syntax.  Checkout [FuturoCube.com/sdk](https://futurcube.com/sdk) for getting setup with the Futuro Cube SDK.  The .p files can be opened in a text editor like [Sublime](http://www.sublimetext.com/) or [NotePad++](https://notepad-plus-plus.org/).
+Apps are written in [PAWN](http://www.compuphase.com/pawn/pawn.htm), an embedded scripting language with C like syntax.  Checkout [FuturoCube.com/sdk](https://futurcube.com/sdk) for getting setup with the Futuro Cube SDK.  The .p files can be opened in a text editor like [Sublime](http://www.sublimetext.com/) or [NotePad++](https://notepad-plus-plus.org/).
+
+###Steps to start hacking:
+1. Download and Install Rubik's Futuro Cube Suite
+2. Clone this Repo
+3. Edit or add .p script in source folder
+4. Open SDK mode In Rubik's Futuro Cube Suite menu: "View -> SDK mode"
+5. Select your script by clicking the "Selected SCRIPT" button with label "..." 
+6. Click "Compile and Upload to FLASH"
 
 ## Wanna Contribute?
 If you wanna contribute:
