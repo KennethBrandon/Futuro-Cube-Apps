@@ -1,4 +1,4 @@
-![Void](images/Void-150x150.png) ![Color Picker](images/Color-Picker-150x150.png) ![Run Through Colors](images/RunThrougColors-150x150.png) ![Play All Sounds](images/PlayAllSounds-150x150.png) ![Rubik's] (images/Rubiks-150x150.png)
+![Void](images/Void-150x150.png) ![Color Picker](images/Color-Picker-150x150.png) ![Run Through Colors](images/RunThrougColors-150x150.png) ![Play All Sounds](images/PlayAllSounds-150x150.png)
 # Futuro Cube Apps
 A collection of apps written for the [Rubik's Futuro Cube](http://futurocube.com).  See demos of these apps [here.](http://www.kennethbrandon.com/rubiks-futuro-cube/)
 
