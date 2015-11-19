@@ -10,13 +10,12 @@ A collection of apps written for the [Rubik's Futuro Cube](http://futurocube.com
 * Void Cube
 * Ken's Cube
 
-
 ## Getting Setup
 Apps are written in [PAWN](http://www.compuphase.com/pawn/pawn.htm), an embedded scripting language with C like syntax.  Checkout [FuturoCube.com/sdk](http://futurocube.com/sdk) for getting setup with the Futuro Cube SDK.  The .p files can be opened in a text editor like [Sublime](http://www.sublimetext.com/) or [NotePad++](https://notepad-plus-plus.org/).
 
 ###Steps to install scripts:
 1. Clone this Repo or download the scripts from the [compiled scripts](compiled%20scripts) folder
-2.  Download and Install Rubik's Futuro Cube Suite
+2.  Download and Install [Rubik's Futuro Cube Suite](http://www.futurocube.com/support/)
 3.  Click the Cube Manager button
 4.  Click the Directory Folder
 5.  Choose the [compiled scripts](compiled%20scripts) folder
@@ -25,7 +24,7 @@ Apps are written in [PAWN](http://www.compuphase.com/pawn/pawn.htm), an embedded
 
 
 ###Steps to start hacking:
-1. Download and Install Rubik's Futuro Cube Suite
+1. Download and Install [Rubik's Futuro Cube Suite](http://www.futurocube.com/support/)
 2. Clone this Repo
 3. Edit or add .p script in source folder
 4. Open SDK mode In Rubik's Futuro Cube Suite menu: "View -> SDK mode"
