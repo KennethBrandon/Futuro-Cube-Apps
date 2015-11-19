@@ -17,3 +17,9 @@ If you wanna contribute:
 * Fork the project
 * Make a Branch
 * Create a Pull Request
+
+##Disclamer
+These apps were hacked in a couple days, years ago.  Expect ugly code.
+
+##Contributor:
+* [Kenneth Brandon](http://kennethbrandon.com) - Kenneth@KennethBrandon.com
