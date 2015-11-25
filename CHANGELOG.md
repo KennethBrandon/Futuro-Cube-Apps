@@ -4,6 +4,7 @@ All changes will be found here
 ## Next Release: v1.1 
 ### Features:
 * Added new app Musical Dice!
+* Added shake to scramble for Rubik's Cube
 
 ##v1.0 - released Jul 20, 2013
 
