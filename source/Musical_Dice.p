@@ -1,11 +1,14 @@
 /**Musical_Dice.p
 * By Kenneth Brandon Nov 2015
 * This app allows someone to tap on a side and play a musical note
-* Notes are aranged in a chromatic scale starting with taping side 1 with side 1 up
+* Notes are aranged in a chromatic scale starting with taping side 1 while side 1 is up
 **/
 #include <futurocube>
-new icon[]=[ICON_MAGIC1,ICON_MAGIC2,1,4,0,cPURPLE,cPURPLE,cPURPLE,cPURPLE,0,cPURPLE,cPURPLE,0,''_c1'',''_c2''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description sound
-main()   //
+//icon array fromat: ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Description sound
+new icon[]=[ICON_MAGIC1,ICON_MAGIC2,1,4,  
+	0,cPURPLE,cPURPLE,cPURPLE,cPURPLE,0,cPURPLE,cPURPLE,0, //colors for menu icon
+	''_c1'',''_c2''] // name, and description 
+main()   
 { 
     ICON(icon)
 	RegAllSideTaps()
@@ -18,7 +21,7 @@ main()   //
 		if(Motion()) {
 			kickSide=eTapSide()
 			PlayNote(ConvertToDiceNumber(currentSide), ConvertToDiceNumber(kickSide))
-			SetTimer(kickSide, 1000);
+			SetTimer(kickSide, 1000);  //sets timer to draw flicker for 1 second on the side that was kicked
 		} 
 		AckMotion()
 		DrawMyCube(currentSide) 
@@ -99,9 +102,9 @@ PlayNote(upSide, kickSide){
 	Play(fileName);
 }
 
-DrawMyCube(side)
+DrawMyCube(upSide)
 {
-	switch(side){
+	switch(upSide){
 		case 0: SetColor(cPURPLE)
 		case 1: SetColor(cGREEN)
 		case 2: SetColor(cBLUE)
