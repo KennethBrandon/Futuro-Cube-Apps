@@ -9,6 +9,7 @@ A collection of apps written for the [Rubik's Futuro Cube](http://futurocube.com
 * Rubik's Cube with correct colors
 * Void Cube
 * Ken's Cube
+* Musical Dice
 
 ## Getting Setup
 Apps are written in [PAWN](http://www.compuphase.com/pawn/pawn.htm), an embedded scripting language with C like syntax.  Checkout [FuturoCube.com/sdk](http://futurocube.com/sdk) for getting setup with the Futuro Cube SDK.  The .p files can be opened in a text editor like [Sublime](http://www.sublimetext.com/) or [NotePad++](https://notepad-plus-plus.org/).
