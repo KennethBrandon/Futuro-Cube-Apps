@@ -1,12 +1,9 @@
 #Change Log
 All changes will be found here
 
-## Next Release: v1.0.1 
+## Next Release: v1.1 
 ### Features:
-* new features go here
-
-### Bug fixes:
-* bug fixes go here
+* Added new app Musical Dice!
 
 ##v1.0 - released Jul 20, 2013
 
