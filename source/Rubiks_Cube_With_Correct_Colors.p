@@ -39,7 +39,7 @@ new solvedCube[54]  // This will hold a solved cube.
 new motion
 new kick_side
 new dirdecide
-
+new isRacing = false;
 new rubik_var[]=[VAR_MAGIC1,VAR_MAGIC2,''rubiks_with_Kens_Colors'']
 
 
@@ -86,6 +86,7 @@ main()
 	ICON(icon)
     RegisterVariable(rubik_var)
     RegAllSideTaps()
+    RegMotion(SHAKING)
     CubeInit()
     Draw()
                             
@@ -105,12 +106,52 @@ main()
           else Play("soko_back")
           TransformSide(kick_side,dirdecide)
           StoreVariable(''rubiks_with_Kens_Colors'',cube)
-		  if(IsCubeSolved()) PlaySolvedAnimation()  //Checks for Solved Cube and if it's solved plays sound and animation.
+		      if(isRacing && IsCubeSolved()) {
+            PlaySolvedAnimation() 
+            isRacing = false //Checks for Solved Cube and if it's solved plays sound and animation.
+          }
          }
          else Vibrate(100)
          AckMotion() 
         }
+        if (_is(motion,SHAKING)){
+          Play("bubbles")
+          if(!isRacing){
+            Scramble()
+            isRacing = true;
+          }
+          else{
+            cube = solvedCube
+            StoreVariable(''rubiks_with_Kens_Colors'',cube)
+            Draw()
+          }
+        }
     }
+
+}
+Scramble(){
+  new i =0;
+
+    new side = GetRnd(6)
+    new direction = GetRnd(2)
+    for (i = 0; i < 3; ++i)
+    { 
+      side = GetRnd(6)
+     direction = GetRnd(2)
+      TransformSide(side, direction)
+      Delay(300)  
+    }
+
+  for(i=0; i<35; i++){
+    side = GetRnd(6)
+    direction = GetRnd(3)
+    printf("Side: %d Direction: %d \n", side, direction);
+    if(direction==2){
+      TransformSide(side, direction)
+      TransformSide(side, direction)
+    }
+    else TransformSide(side, direction)
+  }
 }
 IsCubeSolved()   //Returns 1 if cube is solved.  Returns 0 if cube is not solved.
 {
