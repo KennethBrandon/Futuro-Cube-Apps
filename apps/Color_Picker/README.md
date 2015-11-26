@@ -1,6 +1,6 @@
 ![Color Picker](../../images/Color-Picker-150x150.png)
 # Color Picker
-## By: Kenneth Brandon July 2013
+##### By: Kenneth Brandon July 2013
 This app is intended to find good color combinations.
 
 This script should allow someone to add or remove more Red, Green, and Blue to choose a color. Color RGB value printed to console.
