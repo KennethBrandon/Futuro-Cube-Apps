@@ -1,7 +1,7 @@
-![Void](images/Void-150x150.png) 
+![Void](../../images/Void-150x150.png) 
 # Void Cube
-## Edited from: [example_5_animated_rubiks.p](http://www.futurocube.com/sdk/)
-## Edited By: Kenneth Brandon  
+##### Modified from: [example_5_animated_rubiks.p](http://www.futurocube.com/sdk/)
+##### Modified By: Kenneth Brandon  
 
 ### Changes made:
 * Turned it into a Void Cube
