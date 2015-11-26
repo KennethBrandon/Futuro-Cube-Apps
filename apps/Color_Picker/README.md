@@ -1,4 +1,4 @@
-![Color Picker](images/Color-Picker-150x150.png)
+![Color Picker](../../images/Color-Picker-150x150.png)
 # Color Picker
 ## By: Kenneth Brandon July 2013
 This app is intended to find good color combinations.
