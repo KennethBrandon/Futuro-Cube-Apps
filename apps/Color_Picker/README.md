@@ -3,21 +3,15 @@
 ## By: Kenneth Brandon July 2013
 This app is intended to find good color combinations.
 
+This script should allow someone to add or remove more Red, Green, and Blue to choose a color. Color RGB value printed to console.
 
-This script should allow someone to add or remove 
-more Red, Green, and Blue to choose a color.  
-Color RGB value printed to console
-
-Tapping on Red side will add or remove red.  
-Tapping on Blue side will add or remove Blue
-Tapping on Green side will add or remove green.
-
-You can also change the speed at whcih you add or remove to each color by tapping on side 3.
-
-It will add when the side is facing up and remove when facing down.
-
-Change Modes by tapping on sides 4 or 5 repeadly 5 times
-
+### Usage
+* Tapping on Red side will add or remove red.  
+* Tapping on Blue side will add or remove Blue.
+* Tapping on Green side will add or remove green.
+* Tapping on Side 3 will change the amount of color added on each tap
+* Switch Modes by tapping on sides 4 or 5 repeadly 5 times
+```
 Wrap  Mode  (Default Mode)
            [-][+][-]       				   [4]
            [-][+][-]    				[0][2][1][3]
@@ -38,4 +32,5 @@ Wrap  Mode  (Default Mode)
 [r][r][r]  [b][b][b]  [-][+][+]  [+][+][-]
            [-][-][-]
            [-][+][+]   ("-" are off, "+" is the resulting RGB color, 
-           [-][+][+]   capital letters are the current value of R G or B.	
+           [-][+][+]   capital letters are the current value of R G or B.
+```
