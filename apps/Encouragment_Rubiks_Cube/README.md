@@ -1,7 +1,7 @@
-![Encouragment Cube](images/Rubiks-150x150.png)
+![Encouragment Cube](../../images/Rubiks-150x150.png)
 #Encouragment Cube
-## Edited from: [example_5_animated_rubiks.p](http://www.futurocube.com/sdk/)
-## Edited By: Kenneth Brandon  
+#####Modifed from: [example_5_animated_rubiks.p](http://www.futurocube.com/sdk/)
+#####Modifications by: Kenneth Brandon  July 2013
 
 ### Disclamer : This app was never finished.
 
