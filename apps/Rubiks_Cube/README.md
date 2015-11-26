@@ -1,7 +1,7 @@
-![Rubik's Cube](images/Rubiks-150x150.png)
+![Rubik's Cube](../../images/Rubiks-150x150.png)
 # Rubik's Cube
-## Edited from: [example_5_animated_rubiks.p](http://www.futurocube.com/sdk/)
-## Edited By: Kenneth Brandon  
+##### Modified from: [example_5_animated_rubiks.p](http://www.futurocube.com/sdk/)
+##### Modifications By: Kenneth Brandon  
 
 ### Changes made:
 * Correct colors and color scheme
