@@ -1,4 +1,4 @@
-![Void](images/Void-150x150.png) ![Color Picker](images/Color-Picker-150x150.png) ![Run Through Colors](images/RunThrougColors-150x150.png) ![Play All Sounds](images/PlayAllSounds-150x150.png)
+![Void](images/Void-150x150.png) ![Color Picker](images/Color-Picker-150x150.png) ![Run Through Colors](images/RunThrougColors-150x150.png) ![Play All Sounds](images/PlayAllSounds-150x150.png) ![Rubik's Cube](images/Rubiks-150x150.png)
 # Futuro Cube Apps
 A collection of apps written for the [Rubik's Futuro Cube](http://futurocube.com).  See demos of these apps [here.](http://www.kennethbrandon.com/rubiks-futuro-cube/)
 
@@ -19,15 +19,15 @@ Apps are written in [PAWN](http://www.compuphase.com/pawn/pawn.htm), an embedded
 2.  Download and Install [Rubik's Futuro Cube Suite](http://www.futurocube.com/support/)
 3.  Click the Cube Manager button
 4.  Click the Directory Folder
-5.  Choose the [compiled scripts](compiled%20scripts) folder
-6.  Drag the desired amx script files to the menu item you want
+5.  Choose the [desired app](apps) folder
+6.  Drag the amx file to the menu item you want
 7.  Click APPLY CHANGES
 
 
 ###Steps to start hacking:
 1. Download and Install [Rubik's Futuro Cube Suite](http://www.futurocube.com/support/)
 2. Clone this Repo
-3. Edit or add .p script in source folder
+3. Edit a .p file from one of the existing [apps](apps) folder or create a new one
 4. Open SDK mode In Rubik's Futuro Cube Suite menu: "View -> SDK mode"
 5. Select your script by clicking the "Selected SCRIPT" button with label "..." 
 6. Click "Compile and Upload to FLASH"
