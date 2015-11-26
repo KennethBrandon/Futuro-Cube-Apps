@@ -1,5 +1,5 @@
 # Musical_Dice
-## By Kenneth Brandon
+##### By Kenneth Brandon
 
 This is a musical app that plays the same sounds as the default piano app but the notes are identified by the numbers of a dice.  Depnding on which side is up you can play the following notes:
 
