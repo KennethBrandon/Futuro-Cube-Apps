@@ -1,5 +1,5 @@
 # Musical_Dice
-##### By Kenneth Brandon
+##### By Kenneth Brandon - Nov 2015
 
 This is a musical app that plays the same sounds as the default piano app but the notes are identified by the numbers of a dice.  Depnding on which side is up you can play the following notes:
 
@@ -46,3 +46,7 @@ This is a musical app that plays the same sounds as the default piano app but th
  * Tap Side 4: High A
  * Tap Side 5: High A#
  * Tap Side 6: High B
+
+###Todo
+* Add Shake for Settings
+* Add a way to choose between multiple instruments
