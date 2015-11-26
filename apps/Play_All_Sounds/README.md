@@ -1,7 +1,7 @@
- ![Play All Sounds](images/PlayAllSounds-150x150.png)
+ ![Play All Sounds](../../images/PlayAllSounds-150x150.png)
 # Play ALL Sounds
-## By Kenneth Brandon - July 2013
-This is test program to play each sound.  The intention is to be able to find interesting sounds that shipped with the device to use in my own apps.
+##### By Kenneth Brandon - July 2013
+This is test program to play each sound.  The intention was to be able to find interesting sounds that shipped with the device to use in my own apps.
 
 ### Usage:
 * Tapping on the Red + button will play the next sound
