@@ -15,9 +15,6 @@ Unlike the other apps, this one must be installed using the .zip file.  Using Ru
 * Added custom sounds for twisting
 * Added custom sounds for menu and description
 
-### Todo:
-* Save High Score
-
 ### Original Readme:
 This example shows simple implementation of rubik's cube with animated rotations.
 Direction of rotation is determined by inclination of tapped side. SolveDir function
