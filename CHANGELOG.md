@@ -5,6 +5,7 @@ All changes will be found here
 ### Features:
 * Added new app Musical Dice!
 * Added shake to scramble for Rubik's Cube
+* Added custom sounds to Rubik's Cube
 
 ##v1.0 - released Jul 20, 2013
 
