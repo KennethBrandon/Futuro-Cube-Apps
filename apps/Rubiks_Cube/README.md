@@ -14,6 +14,7 @@ Unlike the other apps, this one must be installed using the .zip file.  Using Ru
 * Added colorful Icon
 * Added custom sounds for twisting
 * Added custom sounds for menu and description
+* Added High Scores
 
 ### Original Readme:
 This example shows simple implementation of rubik's cube with animated rotations.
