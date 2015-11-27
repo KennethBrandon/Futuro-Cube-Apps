@@ -3,12 +3,17 @@
 ##### Modified from: [example_5_animated_rubiks.p](http://www.futurocube.com/sdk/)
 ##### Modifications By: Kenneth Brandon  
 
+###Installing
+Unlike the other apps, this one must be installed using the .zip file.  Using Rubik's Futuro Cube Suite, just drop the [Rubiks_Cube.zip](Rubiks_Cube.zip) file on the side you want the app to go.
+
 ### Changes made:
 * Correct colors and color scheme
 * Added Solve Music
 * Added Solve Animation
 * Added Shake to Scramble
 * Added colorful Icon
+* Added custom sounds for twisting
+* Added custom sounds for menu and description
 
 ### Todo:
 * Save High Score
