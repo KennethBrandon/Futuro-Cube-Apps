@@ -3,26 +3,28 @@
 A collection of apps written for the [Rubik's Futuro Cube](http://futurocube.com).  See demos of these apps [here.](http://www.kennethbrandon.com/rubiks-futuro-cube/)
 
 ## App list:
-* Color Picker
-* Play All Sounds
-* Run Through Colors
-* Rubik's Cube with correct colors
-* Void Cube
-* Ken's Cube
-* Musical Dice
+* [Rubik's Cube](apps/Rubiks_Cube/Rubiks_Cube.zip)
+* [Run Through Colors](apps/Run_Through_Colors/Run_Through_Colors.amx)
+* [Musical Dice](apps/Musical_Dice/Musical_Dice.amx)
+* [Color Picker](apps/Color_Picker/Color_Picker.amx)
+* [Play All Sounds](apps/Play_All_Sounds/Play_All_Sounds.amx)
+* [Void Cube](apps/Void_Cube/Void_Cube.amx)
+* [Encouragment Cube](/apps/Encouragment_Rubiks_Cube/Encouragment_Rubiks_Cube.amx)
 
 ## Getting Setup
 Apps are written in [PAWN](http://www.compuphase.com/pawn/pawn.htm), an embedded scripting language with C like syntax.  Checkout [FuturoCube.com/sdk](http://futurocube.com/sdk) for getting setup with the Futuro Cube SDK.  The .p files can be opened in a text editor like [Sublime](http://www.sublimetext.com/) or [NotePad++](https://notepad-plus-plus.org/).
 
 ###Steps to install scripts:
-1. Clone this Repo or download the scripts from the [compiled scripts](compiled%20scripts) folder
+1. Clone this Repo or download the scripts from the [desired app](apps) folder
 2.  Download and Install [Rubik's Futuro Cube Suite](http://www.futurocube.com/support/)
 3.  Click the Cube Manager button
 4.  Click the Directory Folder
 5.  Choose the [desired app](apps) folder
-6.  Drag the amx file to the menu item you want
+6.  Drag either the amx or zip file onto a side of the cube 
 7.  Click APPLY CHANGES
 
+###Notes:
+Some of the apps are .amx files, others are .zip files.  Clicking the apps links above in the app list will take you directly to the appropriate file.
 
 ###Steps to start hacking:
 1. Download and Install [Rubik's Futuro Cube Suite](http://www.futurocube.com/support/)
