@@ -8,9 +8,12 @@ Changes made:
 2. Added Solve Music
 3. Added Solve Animation
 4. Added colorful Icon
+5. Added Shake to Scramble
+6. Added custom sounds
+7. Added High Scores!
 
 This example shows simple implementation of rubik's cube with animated rotations.
-Direction of rotation is determined by inclination of tapped side. SolveDir function
+Direction of rotation is determined by inclination of tapped side. solveDir function
 reads accelerometer data and compares with threshold for direction.  
 Also each move is stored into variable, so the progress is never lost.   
 
@@ -32,7 +35,8 @@ Also each move is stored into variable, so the progress is never lost.
 
 
 new colors[]=[KEN_BLUE,KEN_GREEN,KEN_YELLOW,KEN_WHITE,KEN_RED,KEN_ORANGE] 
-new icon[]=[ICON_MAGIC1,ICON_MAGIC2,1,2,BLUE,0x20970000,0xFF740000,0xFFA36700,0xFFA36700,RED,0xFF1C0000,0x20970000,0xFF740000,''rubiks_cube'',''rubiks_desc''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description sound
+  new icon[]=[ICON_MAGIC1,ICON_MAGIC2,0,0,BLUE,0x20970000,0xFF740000,0xFFA36700,0xFFA36700,RED,0xFF1C0000,0x20970000,0xFF740000,''rubiks_cube'',''rubiks_desc'',ICON_MAGIC3,''RUBIKS CUBE''    ,1,3,SCORE_BEST_IS_MIN|SCORE_PRIMARY_TIME|SCORE_SECONDARY_POINTS|SCORE_DISP_PTIME_MS|SCORE_DISP_SECONDARY] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description sound
+//new icon[]=[ICON_MAGIC1,ICON_MAGIC2,0,0,I1  ,I1        ,I1        ,I2        ,I2        ,0  ,I4        ,0         ,0         ,''''           ,''''           ,ICON_MAGIC3,''KID MEMORY GAME'',1,3,SCORE_BEST_IS_MIN|SCORE_PRIMARY_TIME|SCORE_SECONDARY_POINTS|SCORE_DISP_PTIME_MS|SCORE_DISP_SECONDARY]
 
 new cube[54]
 new solvedCube[54]  // This will hold a solved cube.
@@ -41,9 +45,11 @@ new kick_side
 new dirdecide
 new isRacing = false;
 new rubik_var[]=[VAR_MAGIC1,VAR_MAGIC2,''rubiks_with_Kens_Colors'']
+new moveCount = 0
+new solutionTime
 
 
-CubeInit()
+cubeInit()
 {
   PaletteFromArray(colors)
   new i
@@ -54,14 +60,14 @@ CubeInit()
   for(i=0;i<54;i++) solvedCube[i]= _side(i)+1  //Creates a solved Cube
 }
 
-Draw()
+draw()
 {
   ClearCanvas()
   DrawArray(cube)
   PrintCanvas()
 }
  
-SolveDir(side)
+solveDir(side)
 {
   new acc[3]
   new val
@@ -84,13 +90,14 @@ SolveDir(side)
 main() 
 {                       
 	ICON(icon)
+    EnablePreciseTiming()    //enabled perciseTiming
     RegisterVariable(rubik_var)
     RegAllSideTaps()
     RegMotion(SHAKING)
-    CubeInit()
-    Draw()
+    cubeInit()
+    draw()
 
-    if(IsCubeSolved()) Play("shake_to_scramble")
+    if(isCubeSolved()) Play("shake_to_scramble")
                             
     for (;;)
     {
@@ -101,15 +108,27 @@ main()
      if (motion) 
         {
          kick_side=eTapSide();
-         dirdecide=SolveDir(kick_side);
+         dirdecide=solveDir(kick_side);
          if (dirdecide!=-1) 
          {
-          if (dirdecide) PlayTwist();
-          else PlayTwist();
-          TransformSide(kick_side,dirdecide)
+          playTwist();
+          moveCount++;
+          printf("move count: %d\n", moveCount);
+          transformSide(kick_side,dirdecide)
           StoreVariable(''rubiks_with_Kens_Colors'',cube)
-		      if(isRacing && IsCubeSolved()) {
-            PlaySolvedAnimation() 
+		      if(isRacing && isCubeSolved()) {
+            playSolvedAnimation() 
+              solutionTime=GetIncTimer();        //Got solution time
+              printf("solutionTime: %d\n", solutionTime);
+              if (solutionTime<=0xFFFFFF  && moveCount<=0xFFF) {  // checks that solution time and move count aren't too long
+                printf("valid time%d\n",solutionTime)
+                new scoreVar = SetScore(CMD_SET_BEST_SCORE,solutionTime,solutionTime,moveCount)
+               if (scoreVar==1) { //checks if high score! 
+                  printf("best time! %d\n", solutionTime)
+                  AnnounceBestScore()
+                }
+                printf("result of setting score: %d\n", scoreVar);
+              }
             isRacing = false //Checks for Solved Cube and if it's solved plays sound and animation.
           }
          }
@@ -119,19 +138,21 @@ main()
         if (_is(motion,SHAKING)){
           Play("bubbles")
           if(!isRacing){
-            Scramble()
+            scramble()
+            moveCount = 0
+            SetIncTimer(0,0)            //our main game timer
             isRacing = true;
           }
           else{
             cube = solvedCube
             StoreVariable(''rubiks_with_Kens_Colors'',cube)
-            Draw()
+            draw()
           }
         }
     }
 
 }
-PlayTwist(){
+playTwist(){
   new i = GetRnd(6);
   switch(i){
     case 0: Play("twist1") 
@@ -142,7 +163,7 @@ PlayTwist(){
     case 5: Play("twist6") 
   }
 }
-Scramble(){
+scramble(){
   new i =0;
 
     new side = GetRnd(6)
@@ -151,8 +172,8 @@ Scramble(){
     { 
       side = GetRnd(6)
       direction = GetRnd(2)
-      TransformSide(side, direction)
-      PlayTwist();
+      transformSide(side, direction)
+      playTwist();
       Delay(300)  
     }
 
@@ -161,14 +182,14 @@ Scramble(){
     direction = GetRnd(3)
     printf("Side: %d Direction: %d \n", side, direction);
     if(direction==2){
-      TransformSide(side, direction)
-      TransformSide(side, direction)
-      PlayTwist();
+      transformSide(side, direction)
+      transformSide(side, direction)
+      playTwist();
     }
-    else TransformSide(side, direction)
+    else transformSide(side, direction)
   }
 }
-IsCubeSolved()   //Returns 1 if cube is solved.  Returns 0 if cube is not solved.
+isCubeSolved()   //Returns 1 if cube is solved.  Returns 0 if cube is not solved.
 {
 	new i =0
 	for(i=0;i<54;i++)
@@ -180,7 +201,7 @@ IsCubeSolved()   //Returns 1 if cube is solved.  Returns 0 if cube is not solved
 	}
 	return 1 //Cube must be solved 
 }
-PlaySolvedAnimation()
+playSolvedAnimation()
 {
 	Play("clapping")
 	printf("Cube solved! Played clapping\r\n")
@@ -265,7 +286,7 @@ new const _t_side_top[6][12]=[[45,46,47,33,30,27,44,43,42,20,23,26],
 
 new const _t_side_rot[8]=[3,6,7,8,5,2,1,0]
 
-MakeShift(belt[],lenght,dir=1)
+makeShift(belt[],lenght,dir=1)
 {
   new temp
   new i
@@ -285,24 +306,24 @@ MakeShift(belt[],lenght,dir=1)
   }
 }
 	
-TransformSide(side, dir)
+transformSide(side, dir)
 {
   new bbelt[8]
   new i
   for (i=0;i<8;i++) bbelt[i]=side*9+_t_side_rot[i]
   
-  MakeShift(_t_side_top[side],12,dir)
-  Draw()
+  makeShift(_t_side_top[side],12,dir)
+  draw()
   Delay(SPEED_STEP)
-  MakeShift(bbelt,8,dir)
-  Draw()
+  makeShift(bbelt,8,dir)
+  draw()
   Delay(SPEED_STEP)
-  MakeShift(_t_side_top[side],12,dir)
-  Draw()
+  makeShift(_t_side_top[side],12,dir)
+  draw()
   Delay(SPEED_STEP)
-  MakeShift(bbelt,8,dir)
-  Draw()
+  makeShift(bbelt,8,dir)
+  draw()
   Delay(SPEED_STEP)
-  MakeShift(_t_side_top[side],12,dir)
-  Draw()
+  makeShift(_t_side_top[side],12,dir)
+  draw()
 }	
