@@ -32,7 +32,7 @@ Also each move is stored into variable, so the progress is never lost.
 
 
 new colors[]=[KEN_BLUE,KEN_GREEN,KEN_YELLOW,KEN_WHITE,KEN_RED,KEN_ORANGE] 
-new icon[]=[ICON_MAGIC1,ICON_MAGIC2,1,2,BLUE,0x20970000,0xFF740000,0xFFA36700,0xFFA36700,RED,0xFF1C0000,0x20970000,0xFF740000,''ballhit'',''hitrims1''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description sound
+new icon[]=[ICON_MAGIC1,ICON_MAGIC2,1,2,BLUE,0x20970000,0xFF740000,0xFFA36700,0xFFA36700,RED,0xFF1C0000,0x20970000,0xFF740000,''rubiks_cube'',''rubiks_desc''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description sound
 
 new cube[54]
 new solvedCube[54]  // This will hold a solved cube.
@@ -89,6 +89,8 @@ main()
     RegMotion(SHAKING)
     CubeInit()
     Draw()
+
+    if(IsCubeSolved()) Play("shake_to_scramble")
                             
     for (;;)
     {
@@ -102,8 +104,8 @@ main()
          dirdecide=SolveDir(kick_side);
          if (dirdecide!=-1) 
          {
-          if (dirdecide) Play("kap") 
-          else Play("soko_back")
+          if (dirdecide) PlayTwist();
+          else PlayTwist();
           TransformSide(kick_side,dirdecide)
           StoreVariable(''rubiks_with_Kens_Colors'',cube)
 		      if(isRacing && IsCubeSolved()) {
@@ -129,6 +131,17 @@ main()
     }
 
 }
+PlayTwist(){
+  new i = GetRnd(6);
+  switch(i){
+    case 0: Play("twist1") 
+    case 1: Play("twist2") 
+    case 2: Play("twist3") 
+    case 3: Play("twist4") 
+    case 4: Play("twist5") 
+    case 5: Play("twist6") 
+  }
+}
 Scramble(){
   new i =0;
 
@@ -137,8 +150,9 @@ Scramble(){
     for (i = 0; i < 3; ++i)
     { 
       side = GetRnd(6)
-     direction = GetRnd(2)
+      direction = GetRnd(2)
       TransformSide(side, direction)
+      PlayTwist();
       Delay(300)  
     }
 
@@ -149,6 +163,7 @@ Scramble(){
     if(direction==2){
       TransformSide(side, direction)
       TransformSide(side, direction)
+      PlayTwist();
     }
     else TransformSide(side, direction)
   }
