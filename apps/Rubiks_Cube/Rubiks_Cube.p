@@ -27,9 +27,9 @@ Also each move is stored into variable, so the progress is never lost.
 #define KEN_RED 0xFF000000
 new colors[]=[KEN_BLUE,KEN_GREEN,KEN_YELLOW,KEN_WHITE,KEN_RED,KEN_ORANGE]
 new icon[]=[ICON_MAGIC1,ICON_MAGIC2,0,0,BLUE,0x20970000,0xFF740000,0xFFA36700,0xFFA36700,RED,0xFF1C0000,0x20970000,0xFF740000,''rubiks_cube'',''rubiks_desc'',ICON_MAGIC3,''RUBIKS CUBE'' ,1,3,SCORE_BEST_IS_MIN|SCORE_PRIMARY_TIME|SCORE_SECONDARY_POINTS|SCORE_DISP_PTIME_MS|SCORE_DISP_SECONDARY] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description sound
-//new icon[]=[ICON_MAGIC1,ICON_MAGIC2,0,0,I1 ,I1 ,I1 ,I2 ,I2 ,0 ,I4 ,0 ,0 ,'''' ,'''' ,ICON_MAGIC3,''KID MEMORY GAME'',1,3,SCORE_BEST_IS_MIN|SCORE_PRIMARY_TIME|SCORE_SECONDARY_POINTS|SCORE_DISP_PTIME_MS|SCORE_DISP_SECONDARY]
-new cube[54]
+new cube[54] 
 new solvedCube[54] // This will hold a solved cube.
+new storedVariable[57] //cube + move count + isRacing + currentTime
 new motion
 new kick_side
 new dirdecide
@@ -37,15 +37,40 @@ new isRacing = false;
 new rubik_var[]=[VAR_MAGIC1,VAR_MAGIC2,''rubiks_with_Kens_Colors'']
 new moveCount = 0
 new solutionTime
+new startTimerOnFirstMove = false
+new previousTime
+new previousTapDirection
 cubeInit()
 {
     PaletteFromArray(colors)
+    loadState()
     new i
-    if (!LoadVariable(''rubiks_with_Kens_Colors'',cube) || IsGameResetRequest())
+    for(i=0;i<54;i++) solvedCube[i]= _side(i)+1 //Creates a solved Cube
+}
+saveState(){
+    new i
+    for(i=0; i<54; i++)storedVariable[i] = cube[i]
+    storedVariable[54] = moveCount
+    storedVariable[55] = isRacing
+    storedVariable[56] = previousTime + GetIncTimer()
+    StoreVariable(''rubiks_with_Kens_Colors'',storedVariable);
+}
+loadState(){
+    new i
+    if (!LoadVariable(''rubiks_with_Kens_Colors'',storedVariable) || IsGameResetRequest())
     {
         for (i=0;i<54;i++) cube[i]=_side(i)+1
+        moveCount = 0;
+        isRacing = false
+        previousTime = 0;
     }
-    for(i=0;i<54;i++) solvedCube[i]= _side(i)+1 //Creates a solved Cube
+    else 
+    {
+        for (i=0;i<54;i++) cube[i] = storedVariable[i]
+        moveCount = storedVariable[54]
+        isRacing = storedVariable[55]
+        previousTime = storedVariable[56]
+    }
 }
 draw()
 {
@@ -91,46 +116,53 @@ main()
             dirdecide=solveDir(kick_side);
             if (dirdecide!=-1)
             {
+                if(startTimerOnFirstMove)
+                {
+                    SetIncTimer(0,0) //our main game timer
+                    startTimerOnFirstMove = false
+                }
                 playTwist();
-                moveCount++;
-                printf("move count: %dn", moveCount);
+                if(previousTapDirection != kick_side) moveCount++; //only increment move count if move is on a new side.
+                printf("move count: %d\n", moveCount);
                 transformSide(kick_side,dirdecide)
-                StoreVariable(''rubiks_with_Kens_Colors'',cube)
+                saveState()
                 if(isRacing && isCubeSolved()) {
                     playSolvedAnimation()
-                    solutionTime=GetIncTimer(); //Got solution time
-                    printf("solutionTime: %dn", solutionTime);
-                    if (solutionTime<=0xFFFFFF && moveCount<=0xFFF) {
-                        // checks that solution time and move count aren't too long
-                        printf("valid time%dn",solutionTime)
-                        new scoreVar = SetScore(CMD_SET_BEST_SCORE,solutionTime,solutionTime,moveCount)
-                        if (scoreVar==1) {
-                            //checks if high score!
-                            printf("best time! %dn", solutionTime)
-                            AnnounceBestScore()
-                        }
-                        printf("result of setting score: %dn", scoreVar);
+                    solutionTime=GetIncTimer() + previousTime; //Got solution time which is the current time + previous run times
+                    printf("solutionTime: %d\n", solutionTime);
+                    new scoreVar = SetScore(CMD_SET_BEST_SCORE,solutionTime,solutionTime,moveCount)
+                    if (scoreVar==1) {
+                        //checks if high score!
+                        printf("best time! %d\n", solutionTime)
+                        AnnounceBestScore()
                     }
+                    printf("result of setting score: %d\n", scoreVar)
                     isRacing = false //Checks for Solved Cube and if it's solved plays sound and animation.
+                    previousTime = 0
                 }
             }
             else Vibrate(100)
+            previousTapDirection = kick_side;
+
+            if (_is(motion,SHAKING)){ 
+                Play("bubbles")
+                if(!isRacing){
+                    scramble()
+                    moveCount = 0
+                    saveState()
+                    startTimerOnFirstMove = true
+                    isRacing = true
+                }
+                else{
+                    cube = solvedCube
+                    moveCount = 0
+                    isRacing = false
+                    previousTime = 0
+                    saveState
+                    draw()
+                }
+            }
             AckMotion()
-        }
-        if (_is(motion,SHAKING)){
-            Play("bubbles")
-            if(!isRacing){
-                scramble()
-                moveCount = 0
-                SetIncTimer(0,0) //our main game timer
-                isRacing = true;
-            }
-            else{
-                cube = solvedCube
-                isRacing = false;
-                StoreVariable(''rubiks_with_Kens_Colors'',cube)
-                draw()
-            }
         }
     }
 }
@@ -160,7 +192,7 @@ scramble(){
     for(i=0; i<35; i++){
         side = GetRnd(6)
         direction = GetRnd(3)
-        printf("Side: %d Direction: %d n", side, direction);
+        printf("Side: %d Direction: %d \n", side, direction);
         if(direction==2){
             transformSide(side, direction)
             transformSide(side, direction)
@@ -184,7 +216,7 @@ isCubeSolved()  //Returns 1 if cube is solved. Returns 0 if cube is not solved.
 playSolvedAnimation()
 {
     Play("clapping")
-    printf("Cube solved! Played clappingrn")
+    printf("Cube solved! Played clapping\n")
     new i =0
     new temp[54] // For PushPop intialization
     PushPopInit(temp)
