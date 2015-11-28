@@ -145,6 +145,7 @@ main()
             previousTapDirection = kick_side;
 
             if (_is(motion,SHAKING)){ 
+                previousTime = 0
                 Play("bubbles")
                 if(!isRacing){
                     scramble()
@@ -157,7 +158,6 @@ main()
                     cube = solvedCube
                     moveCount = 0
                     isRacing = false
-                    previousTime = 0
                     saveState
                     draw()
                 }
