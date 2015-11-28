@@ -145,6 +145,7 @@ main()
           }
           else{
             cube = solvedCube
+            isRacing = false;
             StoreVariable(''rubiks_with_Kens_Colors'',cube)
             draw()
           }
