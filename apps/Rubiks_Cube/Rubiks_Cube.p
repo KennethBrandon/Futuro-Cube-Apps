@@ -25,14 +25,20 @@ Also each move is stored into variable, so the progress is never lost.
 #define KEN_WHITE 0xFFA36700
 #define KEN_ORANGE 0xFF1C0000
 #define KEN_RED 0xFF000000
+#define SOLVING 0
+#define FREEPLAY  1
+#define SOLVED 2
+#define SCRAMBLING 3
+#define INSPECTION_LESSTHAN_8 4
+#define INSPECTION_MORETHAN_8 5
+#define INSPECTION_MORETHAN_12 6
+#define INSPECTION_MORETHAN_15 7
+#define INSPECTION 8
 new colors[]=[KEN_BLUE,KEN_GREEN,KEN_YELLOW,KEN_WHITE,KEN_RED,KEN_ORANGE]
 new icon[]=[ICON_MAGIC1,ICON_MAGIC2,0,0,BLUE,0x20970000,0xFF740000,0xFFA36700,0xFFA36700,RED,0xFF1C0000,0x20970000,0xFF740000,''rubiks_cube'',''rubiks_desc'',ICON_MAGIC3,''RUBIKS CUBE'' ,1,3,SCORE_BEST_IS_MIN|SCORE_PRIMARY_TIME|SCORE_SECONDARY_POINTS|SCORE_DISP_PTIME_MS|SCORE_DISP_SECONDARY] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description sound
 new cube[54] 
 new solvedCube[54] // This will hold a solved cube.
 new storedVariable[57] //cube + move count + isRacing + currentTime
-new motion
-new kick_side
-new dirdecide
 new isRacing = false;
 new rubik_var[]=[VAR_MAGIC1,VAR_MAGIC2,''rubiks_with_Kens_Colors'']
 new moveCount = 0
@@ -40,6 +46,11 @@ new solutionTime
 new startTimerOnFirstMove = false
 new previousTime
 new previousTapDirection
+new isSolved = false
+new isWinner = false
+new add2Sec = false
+new cubeState = FREEPLAY
+new inspectState = INSPECTION_LESSTHAN_8
 cubeInit()
 {
     PaletteFromArray(colors)
@@ -63,6 +74,7 @@ loadState(){
         moveCount = 0;
         isRacing = false
         previousTime = 0;
+        cubeState = FREEPLAY
     }
     else 
     {
@@ -72,10 +84,25 @@ loadState(){
         previousTime = storedVariable[56]
     }
 }
-draw()
+draw(drawFlicker)
 {
     ClearCanvas()
-    DrawArray(cube)
+    if(drawFlicker){
+        new j = 0
+        for (j=0;j<54;j++)
+        {
+            if (j==0) SetColor(KEN_BLUE)
+            if (j==9) SetColor(KEN_GREEN)
+            if (j==18) SetColor(KEN_YELLOW)
+            if (j==27) SetColor(KEN_WHITE)
+            if (j==36) SetColor(KEN_RED)
+            if (j==45) SetColor(KEN_ORANGE)
+            DrawFlicker(_w(j),20,FLICK_STD,j*2)
+        }
+    }
+    else {
+        DrawArray(cube)
+    }
     PrintCanvas()
 }
 solveDir(side)
@@ -104,31 +131,66 @@ main()
     RegAllSideTaps()
     RegMotion(SHAKING)
     cubeInit()
-    draw()
-    if(isCubeSolved()) Play("shake_to_scramble")
+    isSolved = isCubeSolved()
+    draw(false)
+    if(isSolved) Play("shake_to_scramble")
+    new motion = 0;
     for (;;)
     {
         Sleep()
-        draw()
         motion=Motion()
+        if(cubeState == INSPECTION){
+            new duration = 17000 - GetTimer()
+            if(inspectState == INSPECTION_LESSTHAN_8){
+                if(duration>8000){
+                    inspectState = INSPECTION_MORETHAN_8
+                    Play("8_seconds")
+                }
+            }
+            if(inspectState == INSPECTION_MORETHAN_8){
+                if(duration>12000){
+                    inspectState = INSPECTION_MORETHAN_12
+                    Play("go")
+                }
+            }
+            if(inspectState == INSPECTION_MORETHAN_12){
+                if(duration>15000){
+                    inspectState = INSPECTION_MORETHAN_15
+                    add2Sec = true;
+                }
+            }
+            if(inspectState == INSPECTION_MORETHAN_15){
+                if(duration >=17000){
+                    isRacing = false
+                    cubeState = FREEPLAY
+                    startTimerOnFirstMove = false
+                    Play("dnf")
+                }
+            }
+        }
         if (motion)
         {
-            kick_side=eTapSide();
-            dirdecide=solveDir(kick_side);
+            new kick_side=eTapSide();
+            new dirdecide=solveDir(kick_side);
             if (dirdecide!=-1)
             {
+                if(cubeState == INSPECTION){
+                    cubeState = SOLVING
+                }
                 if(startTimerOnFirstMove)
                 {
                     SetIncTimer(0,0) //our main game timer
                     startTimerOnFirstMove = false
                 }
                 playTwist();
+                if(isWinner&&isSolved)Quiet() //turn off winning music
                 if(previousTapDirection != kick_side) moveCount++; //only increment move count if move is on a new side.
                 printf("move count: %d\n", moveCount);
                 transformSide(kick_side,dirdecide)
                 saveState()
-                if(isRacing && isCubeSolved()) {
-                    playSolvedAnimation()
+                isSolved = isCubeSolved();
+                if(isRacing && isSolved) {
+                    isWinner = true
                     solutionTime=GetIncTimer() + previousTime; //Got solution time which is the current time + previous run times
                     printf("solutionTime: %d\n", solutionTime);
                     new scoreVar = SetScore(CMD_SET_BEST_SCORE,solutionTime,solutionTime,moveCount)
@@ -137,34 +199,46 @@ main()
                         printf("best time! %d\n", solutionTime)
                         AnnounceBestScore()
                     }
+                    draw(false)
+                    playSolvedCongrats(solutionTime)
                     printf("result of setting score: %d\n", scoreVar)
                     isRacing = false //Checks for Solved Cube and if it's solved plays sound and animation.
                     previousTime = 0
                 }
+
+                if(isWinner&& isSolved) Play("_d_EUROBEAT")
             }
             else Vibrate(100)
             previousTapDirection = kick_side;
 
             if (_is(motion,SHAKING)){ 
                 previousTime = 0
-                Play("bubbles")
                 if(!isRacing){
+                    Play("inspection_time")
+                    cubeState=SCRAMBLING
                     scramble()
                     moveCount = 0
                     saveState()
                     startTimerOnFirstMove = true
                     isRacing = true
+                    SetTimer(0,17000)
+                    cubeState=INSPECTION
+                    add2Sec = false
+                    inspectState = INSPECTION_LESSTHAN_8
                 }
                 else{
+                    Play("vzum")
                     cube = solvedCube
+                    cubeState = FREEPLAY
                     moveCount = 0
                     isRacing = false
                     saveState
-                    draw()
+                    draw(true)
                 }
             }
             AckMotion()
         }
+        draw(isSolved&&isWinner)
     }
 }
 playTwist(){
@@ -214,34 +288,37 @@ isCubeSolved()  //Returns 1 if cube is solved. Returns 0 if cube is not solved.
     }
     return 1 //Cube must be solved
 }
-playSolvedAnimation()
+playSolvedCongrats(ms)
 {
-    Play("clapping")
-    printf("Cube solved! Played clapping\n")
-    new i =0
-    new temp[54] // For PushPop intialization
-    PushPopInit(temp)
-    PushCanvas(0) //Pushes the current cube before animation
-    new j = 0;
-    new k = 0;
-    for (i=0;i<1400;i++)
-    {
-       for (j=0;j<54;j++)
-       {
-         if (j==0) SetColor(KEN_BLUE)
-         if (j==9) SetColor(KEN_GREEN)
-         if (j==18) SetColor(KEN_YELLOW)
-         if (j==27) SetColor(KEN_WHITE)
-         if (j==36) SetColor(KEN_RED)
-         if (j==45) SetColor(KEN_ORANGE)
-         DrawFlicker(_w(j),10,0,0)
-       }
-       PrintCanvas()
+    new seconds = (ms / 1000) % 60 ;
+    new minutes = ((ms / (1000*60)) % 60);
+    new hours   = ((ms / (1000*60*60)) % 24);
+    if(add2Sec) { 
+        Play("2s_penelty"); 
+        WaitPlayOver()
+    }
+    Play("your_time_is")
+    WaitPlayOver()
+    if(hours>0){
+        playNumber(hours)
+        if(hours ==1)Play("hour")
+        else Play("hours")
+        WaitPlayOver()
+    }
+    if(minutes>0){
+        playNumber(minutes)
+        if(minutes ==1)Play("min")
+        else Play("mins")
+        WaitPlayOver()
     }
 
-  
-    PopCanvas(0) //Gets the state before animation
-    PrintCanvas()
+    if(seconds>0){
+        playNumber(seconds)
+        Play("seconds")
+        WaitPlayOver()
+    }
+    printf("Cube solved in %dh, %dm, %ds\n", hours, minutes, seconds)
+
 }
 new const _t_side_top[6][12]=[[45,46,47,33,30,27,44,43,42,20,23,26],
 [53,52,51,24,21,18,36,37,38,29,32,35],
@@ -275,17 +352,69 @@ transformSide(side, dir)
     new i
     for (i=0;i<8;i++) bbelt[i]=side*9+_t_side_rot[i]
     makeShift(_t_side_top[side],12,dir)
-    draw()
+    draw(false)
     Delay(SPEED_STEP)
     makeShift(bbelt,8,dir)
-    draw()
+    draw(false)
     Delay(SPEED_STEP)
     makeShift(_t_side_top[side],12,dir)
-    draw()
+    draw(false)
     Delay(SPEED_STEP)
     makeShift(bbelt,8,dir)
-    draw()
+    draw(false)
     Delay(SPEED_STEP)
     makeShift(_t_side_top[side],12,dir)
-    draw()
+    draw(false)
+}
+playNumber(number){
+    new string[4]
+    snprintf(string,4,"%d",number%10)
+    if(number<19)
+    {
+        snprintf(string,4,"%d",number)
+        Play(string)  
+        WaitPlayOver()
+    }
+    else if(number<100)
+    {
+        new Mod = number%10
+        
+        snprintf(string,4,"%d",number-Mod)
+        Play(string)
+        WaitPlayOver()
+        if(Mod!=0) 
+        {
+            snprintf(string,4,"%d",Mod)
+            Play(string)
+            WaitPlayOver()
+        }
+    }
+    else
+    {
+        new Mod100 = number%100
+        new Mod10 = Mod100%10
+        snprintf(string,4,"%d",number-Mod100)
+        Play(string)
+        WaitPlayOver()
+        if(Mod100!=0)
+        {               
+            if(Mod100<20) 
+            {
+            snprintf(string,4,"%d",Mod100)
+            Play(string)
+            }
+            else
+            {
+            snprintf(string,4,"%d",Mod100-Mod10)
+            Play(string)
+            WaitPlayOver()
+            if(Mod10!=0)
+            {
+                snprintf(string,4,"%d",Mod10)
+                Play(string)
+                WaitPlayOver()
+            }
+            }
+        }
+    }
 }
