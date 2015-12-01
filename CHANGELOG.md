@@ -9,6 +9,9 @@ All changes will be found here
 * Added high scores for Rubik's Cube
 * Updated audio for Rubik's Cube - now louder
 * Added pause to Rubik's Cube 
+* Added inspection time to Rubik's Cube
+* Added announcment of solve time on Rubik's Cube
+* Updated solve animation with added music
 
 ##v1.0 - released Jul 20, 2013
 
