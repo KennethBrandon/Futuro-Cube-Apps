@@ -135,39 +135,15 @@ main()
     draw(false)
     if(isSolved) Play("shake_to_scramble")
     new motion = 0;
+    new lastDuration = 0;
     for (;;)
     {
         Sleep()
         motion=Motion()
         if(cubeState == INSPECTION){
-            new duration = 17000 - GetTimer()
-            if(inspectState == INSPECTION_LESSTHAN_8){
-                if(duration>8000){
-                    inspectState = INSPECTION_MORETHAN_8
-                    Play("8_seconds")
-                }
-            }
-            if(inspectState == INSPECTION_MORETHAN_8){
-                if(duration>12000){
-                    inspectState = INSPECTION_MORETHAN_12
-                    Play("go")
-                }
-            }
-            if(inspectState == INSPECTION_MORETHAN_12){
-                if(duration>15000){
-                    inspectState = INSPECTION_MORETHAN_15
-                    add2Sec = true;
-                }
-            }
-            if(inspectState == INSPECTION_MORETHAN_15){
-                if(duration >=17000){
-                    isRacing = false
-                    cubeState = FREEPLAY
-                    startTimerOnFirstMove = false
-                    Play("dnf")
-                }
-            }
+            lastDuration = doInspection(lastDuration);
         }
+        else lastDuration = 0;
         if (motion)
         {
             new kick_side=eTapSide();
@@ -192,6 +168,7 @@ main()
                 if(isRacing && isSolved) {
                     isWinner = true
                     solutionTime=GetIncTimer() + previousTime; //Got solution time which is the current time + previous run times
+                    if(add2Sec) solutionTime+=2000;
                     printf("solutionTime: %d\n", solutionTime);
                     new scoreVar = SetScore(CMD_SET_BEST_SCORE,solutionTime,solutionTime,moveCount)
                     if (scoreVar==1) {
@@ -200,9 +177,10 @@ main()
                         AnnounceBestScore()
                     }
                     draw(false)
-                    playSolvedCongrats(solutionTime)
+                    playSolvedCongrats(solutionTime, moveCount)
                     printf("result of setting score: %d\n", scoreVar)
                     isRacing = false //Checks for Solved Cube and if it's solved plays sound and animation.
+                    add2Sec = false
                     previousTime = 0
                 }
 
@@ -288,7 +266,7 @@ isCubeSolved()  //Returns 1 if cube is solved. Returns 0 if cube is not solved.
     }
     return 1 //Cube must be solved
 }
-playSolvedCongrats(ms)
+playSolvedCongrats(ms, moves)
 {
     new seconds = (ms / 1000) % 60 ;
     new minutes = ((ms / (1000*60)) % 60);
@@ -297,7 +275,7 @@ playSolvedCongrats(ms)
         Play("2s_penelty"); 
         WaitPlayOver()
     }
-    Play("your_time_is")
+    Play("you_solved_in")
     WaitPlayOver()
     if(hours>0){
         playNumber(hours)
@@ -317,6 +295,13 @@ playSolvedCongrats(ms)
         Play("seconds")
         WaitPlayOver()
     }
+
+    Play("with")
+    WaitPlayOver()
+    playNumber(moves)
+    WaitPlayOver()
+    Play("moves")
+    WaitPlayOver()
     printf("Cube solved in %dh, %dm, %ds\n", hours, minutes, seconds)
 
 }
@@ -366,6 +351,43 @@ transformSide(side, dir)
     makeShift(_t_side_top[side],12,dir)
     draw(false)
 }
+doInspection(lastDuration){
+    new duration = 17000 - GetTimer()
+    if(duration%12000 ==0 && duration!=lastDuration) Play("clickhigh")
+    else if(duration%13000 ==0 && duration!=lastDuration) Play("clickhigh")
+    else if(duration%14000 ==0 && duration!=lastDuration) Play("clickhigh")
+    else if(duration%15000 ==0 && duration!=lastDuration) Play("bongo")
+    else if(duration%16000 ==0 && duration!=lastDuration) Play("bongo")
+    else if(duration%17000 ==0 && duration!=lastDuration) {Play("uff"); WaitPlayOver();}
+    else if(duration%1000 ==0 && duration!=lastDuration) Play("ballhit")
+    if(inspectState == INSPECTION_LESSTHAN_8){
+        if(duration>8000){
+            inspectState = INSPECTION_MORETHAN_8
+            Play("8_seconds")
+        }
+    }
+    if(inspectState == INSPECTION_MORETHAN_8){
+        if(duration>12000){
+            inspectState = INSPECTION_MORETHAN_12
+            Play("go")
+        }
+    }
+    if(inspectState == INSPECTION_MORETHAN_12){
+        if(duration>15000){
+            inspectState = INSPECTION_MORETHAN_15
+            add2Sec = true;
+        }
+    }
+    if(inspectState == INSPECTION_MORETHAN_15){
+        if(duration >=17000){
+            isRacing = false
+            cubeState = FREEPLAY
+            startTimerOnFirstMove = false
+            Play("dnf")
+        }
+    }
+    return duration
+}
 playNumber(number){
     new string[4]
     snprintf(string,4,"%d",number%10)
@@ -400,20 +422,20 @@ playNumber(number){
         {               
             if(Mod100<20) 
             {
-            snprintf(string,4,"%d",Mod100)
-            Play(string)
+                snprintf(string,4,"%d",Mod100)
+                Play(string)
             }
             else
             {
-            snprintf(string,4,"%d",Mod100-Mod10)
-            Play(string)
-            WaitPlayOver()
-            if(Mod10!=0)
-            {
-                snprintf(string,4,"%d",Mod10)
+                snprintf(string,4,"%d",Mod100-Mod10)
                 Play(string)
                 WaitPlayOver()
-            }
+                if(Mod10!=0)
+                {
+                    snprintf(string,4,"%d",Mod10)
+                    Play(string)
+                    WaitPlayOver()
+                }
             }
         }
     }
