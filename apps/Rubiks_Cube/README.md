@@ -23,6 +23,8 @@ Note- There must be no hidden files in the zip file.
 * Added Inspection Time
 * Added Announcing time at end of solve
 * Added better congrats animation
+* Added inspection ticking sounds
+* Added move announcment after solve
 
 ### Original Readme:
 This example shows simple implementation of rubik's cube with animated rotations.
