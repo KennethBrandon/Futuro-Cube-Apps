@@ -12,6 +12,8 @@ All changes will be found here
 * Added inspection time to Rubik's Cube
 * Added announcment of solve time on Rubik's Cube
 * Updated solve animation with added music
+* Added inspection time ticking sound
+* Added move count announcment after solve
 
 ##v1.0 - released Jul 20, 2013
 
