@@ -4,7 +4,7 @@
 ##### Modifications By: Kenneth Brandon  
 
 ###Installing
-Unlike the other apps, this one must be installed using the .zip file.  Using Rubik's Futuro Cube Suite, just drop the [Rubiks_Cube.zip](Rubiks_Cube.zip) file on the side you want the app to go.
+Unlike the other apps, this one must be installed using the [.zip file](releases/Rubiks_Cube_1_3.zip) found in the [releases folder](releases).  Using Rubik's Futuro Cube Suite, just and drop the zip on the side you want the app to go.
 
 ###Packaging
 To package this app you need to zip the RUBIKS CUBE folder with the .amx file.
