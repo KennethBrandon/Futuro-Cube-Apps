@@ -3,7 +3,7 @@
 A collection of apps written for the [Rubik's Futuro Cube](http://futurocube.com).  See demos of these apps [here.](http://www.kennethbrandon.com/rubiks-futuro-cube/)
 
 ## App list:
-* [Rubik's Cube](apps/Rubiks_Cube/Rubiks_Cube.zip)
+* [Rubik's Cube](apps/Rubiks_Cube/releases)
 * [Run Through Colors](apps/Run_Through_Colors/Run_Through_Colors.amx)
 * [Musical Dice](apps/Musical_Dice/Musical_Dice.amx)
 * [Color Picker](apps/Color_Picker/Color_Picker.amx)
