@@ -39,16 +39,21 @@ main()
 		}
 		ReadAcc(data, past)  //read in accelerometer data 
 
-		new red = (data[0] + 260) / 2   //calculate rgb colors from accelerometer data
-		new green = (data[1] + 260) / 2
-		new blue = (data[2] + 260) / 2
+		new red = (data[0] + 255) / 2   //calculate rgb colors from accelerometer data
+		new green = (data[1] + 255) / 2
+		new blue = (data[2] + 255) / 2
+
+		//darkens colors a bit as they were too white
+		red = red - 35
+		green = green - 35 
+		blue = blue - 36
 
 		if(red < 0) red = 0	//values can be below zero and greater that 255 when more force than gravity is acting on the cube
 		if(blue < 0) blue = 0
 		if(green < 0) green = 0
 		if(red > 255) red = 255
-		if(green > 255) green =255
-		if(blue > 255) blue =255
+		if(green > 255) green = 255
+		if(blue > 255) blue = 255
 
 		if(loops % 400 == 0) { //logs once every 100 loops...
 			printf("raw (x,y,z) data: (%d, %d, %d)   ", data[0], data[1], data[2])
