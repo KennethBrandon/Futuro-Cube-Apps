@@ -1,65 +1,79 @@
 /*  Run Through Colors 
 By: Kenneth Brandon Nov 2016
-Hopefully this program will let you change colors by tilting the cube
+This program will let you change colors by tilting the cube
 */
 
 #include <futurocube>
+#define LOG_FREQUENCY 400 // log once every 400 loops
 
-new icon[]=[ICON_MAGIC1,ICON_MAGIC2,1,3,0xFF004400,0xFF004400,0xFF004400,0x4400FF00,0x4400FF00,0x4400FF00,0x0044FF00,0x0044FF00,0x0044FF00,''HAVOK'',''HAVOK''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description sound
-new TappedSide
-new data[3]
-new loops = 0
-new flickr = 50
-new flickrSpeed = 20
+new icon[]=[ICON_MAGIC1,ICON_MAGIC2,1,3,0x6666ff,0x050555,0x6666ff,0x050555,0x6666ff,0x050555,0x6666ff,0x050555,0x6666ff,''HAVOK'',''HAVOK'', ''Tilt Color'', ''By: Kenneth Brandon'', ''Tilt the cube to change to color, tap the sides to change animation and music''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
+
+new data[3] //holds accelerometer data
+
+new red = 0 
+new green = 0
+new blue = 0
+
+new flickrPhaseMultiplier = 50 //index to modulate the flicker animation
+new flickrSpeed = 20 // index to change speed of flicker
 new songIndex = 1
+
 main()
 {
 	ICON(icon)
-	playSong() 
-		
 	RegAllSideTaps()
+	new loopCount = 0
 	for(;;)  				//Main Loop!!
 	{
-		if(IsPlayOver()) playSong()///If the music stops, start it again
-		Sleep()						//Sleep between loops.
+		Sleep()	//Sleep between loops.
 
-		if(Motion())// If motion (taps) then change the past to test if it adds a delay when grabing accelerometer data...
-		{
-			consumeTaps(eTapSide())
-		}
+		if(IsPlayOver()) playSong() ///If the music stops, start it again
+
+		if(Motion()) consumeTaps(eTapSide()) //if there is motion then we deal with the motion
+		
+		AckMotion()
+
 		ReadAcc(data)  //read in accelerometer data 
 
-		new red = (data[0] + 255) / 2   //calculate rgb colors from accelerometer data
-		new green = (data[1] + 255) / 2
-		new blue = (data[2] + 255) / 2
+		calculateColorFromData()
 
-		//darkens colors a bit as they were too white
-		red = red - 25
-		green = green - 45 
-		blue = blue - 45
-
-		red = validate(red)
-		blue = validate(blue)
-		green = validate(green)
-
-		if(loops % 400 == 0) { //logs once every 100 loops...
-			printf("raw (x,y,z) data: (%d, %d, %d)   ", data[0], data[1], data[2])
-			printf("calculated rgb:  (%d, %d, %d)  \r\n", red,green,blue)
-		}	
-
-		AckMotion()
+		logAccelerometerDataAndColors(loopCount)
 		
-		SetIntensity(255)
-		SetRgbColor(red,green,blue)
-		DrawCube()
-		new j = 0
-		for (j=0;j<54;j++)
-        {
-            DrawFlicker(_w(j),flickrSpeed,FLICK_STD,j*flickr)
-        }
-		PrintCanvas()
-		loops++;
+		drawCube()
+
+		loopCount++;
 	}	
+}
+
+calculateColorFromData(){
+	red = (data[0] + 255) / 2   //calculate rgb colors from accelerometer data
+	green = (data[1] + 255) / 2
+	blue = (data[2] + 255) / 2
+
+	//darkens colors a bit as they were too white
+	red = red - 25 //don't darken red as much because red seemed dimmer than green and blue
+	green = green - 45 
+	blue = blue - 45
+
+	red = validate(red)
+	blue = validate(blue)
+	green = validate(green)
+}
+
+drawCube(){
+	SetIntensity(255)
+	SetRgbColor(red,green,blue)
+	DrawCube()
+	drawFlicker()
+	PrintCanvas()
+}
+
+drawFlicker(){
+	new j = 0
+	for (j=0;j<54;j++)
+	{
+		DrawFlicker(_w(j),flickrSpeed,FLICK_STD,j*flickrPhaseMultiplier)
+	}
 }
 
 validate(color){
@@ -72,12 +86,12 @@ consumeTaps(TappedSide){
 	if(TappedSide==1) 
 	{
 		Play("clickhigh")
-		flickr++
+		flickrPhaseMultiplier++
 	}
 	else if(TappedSide == 0)								
 	{
 		Play("kap")		
-		flickr--
+		flickrPhaseMultiplier--
 	}
 	else if(TappedSide == 4){
 		Play("clickhigh")
@@ -93,8 +107,7 @@ consumeTaps(TappedSide){
 		if(songIndex>5) songIndex = 0
 		Quiet()
 	}
-
-	printf("flicker phase: %d flicker speed: %d\r\n", flickr,flickrSpeed)
+	printf("flicker phase: %d flicker speed: %d\r\n", flickrPhaseMultiplier,flickrSpeed)
 }
 
 playSong(){ //rotates song depending on index
@@ -106,4 +119,11 @@ switch(songIndex){
 	case 4: Play("INSTRM2")
 	case 5: Play("UFO")
 	}
+}
+
+logAccelerometerDataAndColors(loopCount){
+	if(loopCount % LOG_FREQUENCY == 0) { //logs once every 100 loops...
+		printf("raw (x,y,z) data: (%d, %d, %d)   ", data[0], data[1], data[2])
+		printf("calculated rgb:  (%d, %d, %d)  \r\n", red,green,blue)
+	}	
 }
