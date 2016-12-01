@@ -55,9 +55,9 @@ main()
 		new blue = (data[2] + 255) / 2
 
 		//darkens colors a bit as they were too white
-		red = red - 35
-		green = green - 35 
-		blue = blue - 36
+		red = red - 25
+		green = green - 45 
+		blue = blue - 45
 
 		if(red < 0) red = 0	//values can be below zero and greater that 255 when more force than gravity is acting on the cube
 		if(blue < 0) blue = 0
