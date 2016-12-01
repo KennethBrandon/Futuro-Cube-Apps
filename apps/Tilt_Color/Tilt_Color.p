@@ -10,7 +10,8 @@ new TappedSide
 new data[3]
 new loops = 0
 new flickr = 50
-new songIndex = 3
+new flickrSpeed = 20
+new songIndex = 1
 main()
 {
 	ICON(icon)
@@ -35,18 +36,22 @@ main()
 				Play("kap")		
 				flickr--
 			}
-			else if(TappedSide == 2){
+			else if(TappedSide == 4){
+				Play("clickhigh")
+				flickrSpeed++
+			}
+			else if(TappedSide == 5){
+				Play("kap")		
+				flickrSpeed--
+				if(flickrSpeed<1) flickrSpeed = 1
+			}
+			else if(TappedSide == 2 || TappedSide == 3){
 				songIndex++
 				if(songIndex>5) songIndex = 0
 				Quiet()
 			}
-			else if (TappedSide ==4){
-				songIndex--
-				if(songIndex<0) songIndex = 5
-				Quiet()
-			}
 
-			printf("flicker constant: %d\r\n", flickr)
+			printf("flicker phase: %d flicker speed: %d\r\n", flickr,flickrSpeed)
 		}
 		ReadAcc(data)  //read in accelerometer data 
 
@@ -79,7 +84,7 @@ main()
 		new j = 0
 		for (j=0;j<54;j++)
         {
-            DrawFlicker(_w(j),20,FLICK_STD,j*flickr)
+            DrawFlicker(_w(j),flickrSpeed,FLICK_STD,j*flickr)
         }
 		PrintCanvas()
 		loops++;
