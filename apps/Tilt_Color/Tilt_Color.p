@@ -9,35 +9,46 @@ new icon[]=[ICON_MAGIC1,ICON_MAGIC2,1,3,0xFF004400,0xFF004400,0xFF004400,0x4400F
 new TappedSide
 new data[3]
 new loops = 0
-new past = 0
+new flickr = 50
+new songIndex = 3
 main()
 {
 	ICON(icon)
-	Play("HAVOK")
+	playSong() 
 		
 	RegAllSideTaps()
 	for(;;)  				//Main Loop!!
 	{
-		if(IsPlayOver()) Play("HAVOK")///If the music stops, start it again
+		if(IsPlayOver()) playSong()///If the music stops, start it again
 		Sleep()						//Sleep between loops.
 
 		if(Motion())// If motion (taps) then change the past to test if it adds a delay when grabing accelerometer data...
 		{
 			TappedSide=eTapSide()
-			if(TappedSide==1||TappedSide==2||TappedSide==5) 
+			if(TappedSide==1) 
 			{
 				Play("clickhigh")
-				past++
+				flickr++
 			}
-			else								
+			else if(TappedSide == 0)								
 			{
 				Play("kap")		
-				past--
+				flickr--
+			}
+			else if(TappedSide == 2){
+				songIndex++
+				if(songIndex>5) songIndex = 0
+				Quiet()
+			}
+			else if (TappedSide ==4){
+				songIndex--
+				if(songIndex<0) songIndex = 5
+				Quiet()
 			}
 
-			printf("past: %d\r\n", past)
+			printf("flicker constant: %d\r\n", flickr)
 		}
-		ReadAcc(data, past)  //read in accelerometer data 
+		ReadAcc(data)  //read in accelerometer data 
 
 		new red = (data[0] + 255) / 2   //calculate rgb colors from accelerometer data
 		new green = (data[1] + 255) / 2
@@ -65,7 +76,23 @@ main()
 		SetIntensity(255)
 		SetRgbColor(red,green,blue)
 		DrawCube()
+		new j = 0
+		for (j=0;j<54;j++)
+        {
+            DrawFlicker(_w(j),20,FLICK_STD,j*flickr)
+        }
 		PrintCanvas()
 		loops++;
 	}	
+}
+
+playSong(){
+switch(songIndex){
+	case 0: Quiet()
+	case 1: Play("HAVOK")
+	case 2: Play("STRANGE")
+	case 3: Play("_d_EUROBEAT")
+	case 4: Play("INSTRM2")
+	case 5: Play("UFO")
+	}
 }
