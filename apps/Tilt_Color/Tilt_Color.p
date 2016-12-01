@@ -25,33 +25,8 @@ main()
 
 		if(Motion())// If motion (taps) then change the past to test if it adds a delay when grabing accelerometer data...
 		{
-			TappedSide=eTapSide()
-			if(TappedSide==1) 
-			{
-				Play("clickhigh")
-				flickr++
-			}
-			else if(TappedSide == 0)								
-			{
-				Play("kap")		
-				flickr--
-			}
-			else if(TappedSide == 4){
-				Play("clickhigh")
-				flickrSpeed++
-			}
-			else if(TappedSide == 5){
-				Play("kap")		
-				flickrSpeed--
-				if(flickrSpeed<1) flickrSpeed = 1
-			}
-			else if(TappedSide == 2 || TappedSide == 3){
-				songIndex++
-				if(songIndex>5) songIndex = 0
-				Quiet()
-			}
+			consumeTaps(eTapSide())
 
-			printf("flicker phase: %d flicker speed: %d\r\n", flickr,flickrSpeed)
 		}
 		ReadAcc(data)  //read in accelerometer data 
 
@@ -91,7 +66,36 @@ main()
 	}	
 }
 
-playSong(){
+consumeTaps(TappedSide){
+	if(TappedSide==1) 
+	{
+		Play("clickhigh")
+		flickr++
+	}
+	else if(TappedSide == 0)								
+	{
+		Play("kap")		
+		flickr--
+	}
+	else if(TappedSide == 4){
+		Play("clickhigh")
+		flickrSpeed++
+	}
+	else if(TappedSide == 5){
+		Play("kap")		
+		flickrSpeed--
+		if(flickrSpeed<1) flickrSpeed = 1
+	}
+	else if(TappedSide == 2 || TappedSide == 3){
+		songIndex++
+		if(songIndex>5) songIndex = 0
+		Quiet()
+	}
+
+	printf("flicker phase: %d flicker speed: %d\r\n", flickr,flickrSpeed)
+}
+
+playSong(){ //rotates song depending on index
 switch(songIndex){
 	case 0: Quiet()
 	case 1: Play("HAVOK")
