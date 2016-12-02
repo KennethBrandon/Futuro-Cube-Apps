@@ -116,6 +116,7 @@ consumeTaps(tappedSide) {
 	else if(tappedSide == 0) {
 		Play("kap")		
 		flickrPhaseMultiplier--
+		if(flickrPhaseMultiplier < 0) flickrPhaseMultiplier = 0
 	}
 	else if(tappedSide == 4) {
 		Play("woodblock")
