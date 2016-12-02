@@ -16,8 +16,8 @@ new red = 0
 new green = 0
 new blue = 0
 
-new flickrPhaseMultiplier = 50 //index to modulate the flicker animation
-new flickrSpeed = 20 // index to change speed of flicker
+new flickrPhaseMultiplier = 14 //index to modulate the flicker animation
+new flickrSpeed = 9 // index to change speed of flicker
 new songIndex = 1
 
 new tiltColorVar[] = [VAR_MAGIC1, VAR_MAGIC2, ''tilt_color'']
@@ -53,8 +53,8 @@ main() {
 
 restoreState() {
 	if (!LoadVariable(''tilt_color'', storedVariables) || IsGameResetRequest()) { //if it doesn't have values then load initial values
-		flickrPhaseMultiplier = 50 
-		flickrSpeed = 20 
+		flickrPhaseMultiplier = 14 
+		flickrSpeed = 9 
 		songIndex = 1
 	}
 	else {
