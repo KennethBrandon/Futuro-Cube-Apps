@@ -10,7 +10,7 @@ A collection of apps written for the [Rubik's Futuro Cube](http://futurocube.com
 * [Play All Sounds](apps/Play_All_Sounds/Play_All_Sounds.amx)
 * [Void Cube](apps/Void_Cube/Void_Cube.amx)
 * [Encouragment Cube](/apps/Encouragment_Rubiks_Cube/Encouragment_Rubiks_Cube.amx)
-* [Tilt Color](apps/Tilt_Color/Tilt_Color.amx)
+* [Color Tilt](apps/Tilt_Color/Color_Tilt.amx)
 
 ## Getting Setup
 Apps are written in [PAWN](http://www.compuphase.com/pawn/pawn.htm), an embedded scripting language with C like syntax.  Checkout [FuturoCube.com/sdk](http://futurocube.com/sdk) for getting setup with the Futuro Cube SDK.  The .p files can be opened in a text editor like [Sublime](http://www.sublimetext.com/) or [NotePad++](https://notepad-plus-plus.org/).
