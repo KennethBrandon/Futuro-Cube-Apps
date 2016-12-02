@@ -1,4 +1,4 @@
-/*  Run Through Colors 
+/*  Tilt Color 
 By: Kenneth Brandon Nov 2016
 This program will let you change colors by tilting the cube
 */
