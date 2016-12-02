@@ -1,10 +1,12 @@
 /*  Tilt Color 
 By: Kenneth Brandon Dec 2016
 This program will let you change colors by tilting the cube.
+Tapping on the sides will let you change the speed of animation, pattern of animation, and the song that is played
 */
 
 #include <futurocube>
 #define LOG_FREQUENCY 400 // log once every 400 loops
+#define SONG_MAX 16
 
 new icon[] = [ICON_MAGIC1, ICON_MAGIC2, 1, 3, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, ''HAVOK'',''HAVOK'', ''Tilt Color'', ''By: Kenneth Brandon'', ''Tilt the cube to change to color, tap the sides to change animation and music''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
 
@@ -118,17 +120,17 @@ consumeTaps(tappedSide) {
 		flickrPhaseMultiplier--
 	}
 	else if(tappedSide == 4){
-		Play("clickhigh")
+		Play("percussions")
 		flickrSpeed++
 	}
 	else if(tappedSide == 5){
-		Play("kap")		
+		Play("drip")		
 		flickrSpeed--
 		if(flickrSpeed < 1) flickrSpeed = 1
 	}
 	else if(tappedSide == 2 || tappedSide == 3){
 		songIndex++
-		if(songIndex > 5) songIndex = 0
+		if(songIndex >= SONG_MAX) songIndex = 0
 		Quiet()
 	}
 	saveState()
@@ -138,11 +140,21 @@ consumeTaps(tappedSide) {
 playSong() { //rotates song depending on index
 	switch(songIndex){
 		case 0: Quiet()
-		case 1: Play("HAVOK")
+		case 1: Play("COMEANDFIND")
 		case 2: Play("STRANGE")
 		case 3: Play("_d_EUROBEAT")
 		case 4: Play("INSTRM2")
 		case 5: Play("UFO")
+		case 6: Play("HAVOK")
+		case 7: Play("FORTYREWRITE")
+		case 8: Play("FU3")
+		case 9: Play("_d_THERE")
+		case 10: Play("_d_SHAN")
+		case 11: Play("_d_PIANO")
+		case 12: Play("_d_MINDFULL")
+		case 13: Play("_d_EXPECT")
+		case 14: Play("_d_EXP")
+		case 15: Play("_d_CONFESS")
 	}
 }
 
