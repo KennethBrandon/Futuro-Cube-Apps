@@ -18,9 +18,15 @@ new flickrPhaseMultiplier = 50 //index to modulate the flicker animation
 new flickrSpeed = 20 // index to change speed of flicker
 new songIndex = 1
 
+
+new tiltColorVar[]=[VAR_MAGIC1,VAR_MAGIC2, ''tilt_color'']
+new storedVariables[3] //to hold current animation pattern between app uses
+
 main()
 {
 	ICON(icon)
+	RegisterVariable(tiltColorVar)
+	restoreState()
 	RegAllSideTaps()
 	new loopCount = 0
 	for(;;)  				//Main Loop!!
@@ -43,6 +49,26 @@ main()
 
 		loopCount++;
 	}	
+}
+
+restoreState(){
+	if (!LoadVariable(''tilt_color'', storedVariables) || IsGameResetRequest()) { //if it doesn't have values then load initial values
+		flickrPhaseMultiplier = 50 
+		flickrSpeed = 20 
+		songIndex = 1
+	}
+	else {
+		flickrPhaseMultiplier = storedVariables[0] 
+		flickrSpeed = storedVariables[1] 
+		songIndex = storedVariables[2]
+	}
+}
+
+saveState(){
+	storedVariables[0] = flickrPhaseMultiplier
+	storedVariables[1] = flickrSpeed
+	storedVariables[2] = songIndex
+    StoreVariable(''tilt_color'', storedVariables);
 }
 
 calculateColorFromData(){
@@ -107,17 +133,18 @@ consumeTaps(TappedSide){
 		if(songIndex>5) songIndex = 0
 		Quiet()
 	}
-	printf("flicker phase: %d flicker speed: %d\r\n", flickrPhaseMultiplier,flickrSpeed)
+	saveState()
+	printf("flicker phase: %d flicker speed: %d song index: %d\r\n", flickrPhaseMultiplier, flickrSpeed, songIndex)
 }
 
 playSong(){ //rotates song depending on index
-switch(songIndex){
-	case 0: Quiet()
-	case 1: Play("HAVOK")
-	case 2: Play("STRANGE")
-	case 3: Play("_d_EUROBEAT")
-	case 4: Play("INSTRM2")
-	case 5: Play("UFO")
+	switch(songIndex){
+		case 0: Quiet()
+		case 1: Play("HAVOK")
+		case 2: Play("STRANGE")
+		case 3: Play("_d_EUROBEAT")
+		case 4: Play("INSTRM2")
+		case 5: Play("UFO")
 	}
 }
 
