@@ -1,4 +1,4 @@
-# Tilt Color
+# Color Tilt
 ##### By: Kenneth Brandon December 2016
 
 Turning the cube will change the cube's color.
