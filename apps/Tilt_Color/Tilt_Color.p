@@ -1,4 +1,4 @@
-/*  Tilt Color 
+/*  Color Tilt 
 By: Kenneth Brandon Dec 2016
 This program will let you change colors by tilting the cube.
 Tapping on the sides will let you change the speed of animation, pattern of animation, and the song that is played
@@ -8,7 +8,7 @@ Tapping on the sides will let you change the speed of animation, pattern of anim
 #define LOG_FREQUENCY 400 // log once every 400 loops
 #define SONG_MAX 16
 
-new icon[] = [ICON_MAGIC1, ICON_MAGIC2, 1, 3, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, ''HAVOK'',''HAVOK'', ''Tilt Color'', ''By: Kenneth Brandon'', ''Tilt the cube to change to color, tap the sides to change animation and music''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
+new icon[] = [ICON_MAGIC1, ICON_MAGIC2, 1, 3, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, ''HAVOK'',''HAVOK'', ''Color Tilt'', ''By: Kenneth Brandon'', ''Tilt the cube to change to color, tap the sides to change animation and music''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
 
 new data[3] //holds accelerometer data
 
@@ -20,12 +20,12 @@ new flickrPhaseMultiplier = 14 //index to modulate the flicker animation
 new flickrSpeed = 9 // index to change speed of flicker
 new songIndex = 1
 
-new tiltColorVar[] = [VAR_MAGIC1, VAR_MAGIC2, ''tilt_color'']
+new colorTiltVar[] = [VAR_MAGIC1, VAR_MAGIC2, ''color_tilt'']
 new storedVariables[3] //to hold current animation pattern between app uses
 
 main() {
 	ICON(icon)
-	RegisterVariable(tiltColorVar)
+	RegisterVariable(colorTiltVar)
 	restoreState()
 	RegAllSideTaps()
 	new loopCount = 0
@@ -52,7 +52,7 @@ main() {
 }
 
 restoreState() {
-	if (!LoadVariable(''tilt_color'', storedVariables) || IsGameResetRequest()) { //if it doesn't have values then load initial values
+	if (!LoadVariable(''color_tilt'', storedVariables) || IsGameResetRequest()) { //if it doesn't have values then load initial values
 		flickrPhaseMultiplier = 14 
 		flickrSpeed = 9 
 		songIndex = 1
@@ -68,7 +68,7 @@ saveState() {
 	storedVariables[0] = flickrPhaseMultiplier
 	storedVariables[1] = flickrSpeed
 	storedVariables[2] = songIndex
-    StoreVariable(''tilt_color'', storedVariables);
+    StoreVariable(''color_tilt'', storedVariables);
 }
 
 calculateColorFromData() {
