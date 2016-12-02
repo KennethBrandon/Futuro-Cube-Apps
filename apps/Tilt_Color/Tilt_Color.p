@@ -1,6 +1,6 @@
 /*  Tilt Color 
 By: Kenneth Brandon Dec 2016
-This program will let you change colors by tilting the cube
+This program will let you change colors by tilting the cube.
 */
 
 #include <futurocube>
@@ -18,12 +18,10 @@ new flickrPhaseMultiplier = 50 //index to modulate the flicker animation
 new flickrSpeed = 20 // index to change speed of flicker
 new songIndex = 1
 
-
-new tiltColorVar[] = [VAR_MAGIC1,VAR_MAGIC2, ''tilt_color'']
+new tiltColorVar[] = [VAR_MAGIC1, VAR_MAGIC2, ''tilt_color'']
 new storedVariables[3] //to hold current animation pattern between app uses
 
-main()
-{
+main() {
 	ICON(icon)
 	RegisterVariable(tiltColorVar)
 	restoreState()
@@ -51,7 +49,7 @@ main()
 	}	
 }
 
-restoreState(){
+restoreState() {
 	if (!LoadVariable(''tilt_color'', storedVariables) || IsGameResetRequest()) { //if it doesn't have values then load initial values
 		flickrPhaseMultiplier = 50 
 		flickrSpeed = 20 
@@ -64,14 +62,14 @@ restoreState(){
 	}
 }
 
-saveState(){
+saveState() {
 	storedVariables[0] = flickrPhaseMultiplier
 	storedVariables[1] = flickrSpeed
 	storedVariables[2] = songIndex
     StoreVariable(''tilt_color'', storedVariables);
 }
 
-calculateColorFromData(){
+calculateColorFromData() {
 	red = (data[0] + 255) / 2   //calculate rgb colors from accelerometer data
 	green = (data[1] + 255) / 2
 	blue = (data[2] + 255) / 2
@@ -86,7 +84,7 @@ calculateColorFromData(){
 	green = validate(green)
 }
 
-drawCube(){
+drawCube() {
 	SetIntensity(255)
 	SetRgbColor(red, green, blue)
 	DrawCube()
@@ -94,7 +92,7 @@ drawCube(){
 	PrintCanvas()
 }
 
-drawFlicker(){
+drawFlicker() {
 	new j = 0
 	for (j=0; j<54; j++)
 	{
@@ -102,13 +100,13 @@ drawFlicker(){
 	}
 }
 
-validate(color){
+validate(color) {
 	if(color < 0) color = 0	//values can be below zero and greater that 255 when more force than gravity is acting on the cube
 	if(color > 255) color = 255
 	return color
 }
 
-consumeTaps(tappedSide){
+consumeTaps(tappedSide) {
 	if(tappedSide == 1) 
 	{
 		Play("clickhigh")
@@ -137,7 +135,7 @@ consumeTaps(tappedSide){
 	printf("flicker phase: %d flicker speed: %d song index: %d\r\n", flickrPhaseMultiplier, flickrSpeed, songIndex)
 }
 
-playSong(){ //rotates song depending on index
+playSong() { //rotates song depending on index
 	switch(songIndex){
 		case 0: Quiet()
 		case 1: Play("HAVOK")
@@ -148,9 +146,9 @@ playSong(){ //rotates song depending on index
 	}
 }
 
-logAccelerometerDataAndColors(loopCount){
+logAccelerometerDataAndColors(loopCount) {
 	if(loopCount % LOG_FREQUENCY == 0) { //logs once every 100 loops...
 		printf("raw (x,y,z) data: (%d, %d, %d)   ", data[0], data[1], data[2])
-		printf("calculated rgb:  (%d, %d, %d)  \r\n", red, green, blue)
+		printf("calculated rgb:  (%d, %d, %d)\r\n", red, green, blue)
 	}	
 }
