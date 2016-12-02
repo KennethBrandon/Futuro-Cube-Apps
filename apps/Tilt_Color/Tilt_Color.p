@@ -1,12 +1,12 @@
 /*  Tilt Color 
-By: Kenneth Brandon Nov 2016
+By: Kenneth Brandon Dec 2016
 This program will let you change colors by tilting the cube
 */
 
 #include <futurocube>
 #define LOG_FREQUENCY 400 // log once every 400 loops
 
-new icon[]=[ICON_MAGIC1,ICON_MAGIC2,1,3,0x6666ff,0x050555,0x6666ff,0x050555,0x6666ff,0x050555,0x6666ff,0x050555,0x6666ff,''HAVOK'',''HAVOK'', ''Tilt Color'', ''By: Kenneth Brandon'', ''Tilt the cube to change to color, tap the sides to change animation and music''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
+new icon[] = [ICON_MAGIC1, ICON_MAGIC2, 1, 3, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, ''HAVOK'',''HAVOK'', ''Tilt Color'', ''By: Kenneth Brandon'', ''Tilt the cube to change to color, tap the sides to change animation and music''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
 
 new data[3] //holds accelerometer data
 
@@ -19,7 +19,7 @@ new flickrSpeed = 20 // index to change speed of flicker
 new songIndex = 1
 
 
-new tiltColorVar[]=[VAR_MAGIC1,VAR_MAGIC2, ''tilt_color'']
+new tiltColorVar[] = [VAR_MAGIC1,VAR_MAGIC2, ''tilt_color'']
 new storedVariables[3] //to hold current animation pattern between app uses
 
 main()
@@ -88,7 +88,7 @@ calculateColorFromData(){
 
 drawCube(){
 	SetIntensity(255)
-	SetRgbColor(red,green,blue)
+	SetRgbColor(red, green, blue)
 	DrawCube()
 	drawFlicker()
 	PrintCanvas()
@@ -96,9 +96,9 @@ drawCube(){
 
 drawFlicker(){
 	new j = 0
-	for (j=0;j<54;j++)
+	for (j=0; j<54; j++)
 	{
-		DrawFlicker(_w(j),flickrSpeed,FLICK_STD,j*flickrPhaseMultiplier)
+		DrawFlicker(_w(j), flickrSpeed, FLICK_STD, j * flickrPhaseMultiplier)
 	}
 }
 
@@ -108,29 +108,29 @@ validate(color){
 	return color
 }
 
-consumeTaps(TappedSide){
-	if(TappedSide==1) 
+consumeTaps(tappedSide){
+	if(tappedSide == 1) 
 	{
 		Play("clickhigh")
 		flickrPhaseMultiplier++
 	}
-	else if(TappedSide == 0)								
+	else if(tappedSide == 0)								
 	{
 		Play("kap")		
 		flickrPhaseMultiplier--
 	}
-	else if(TappedSide == 4){
+	else if(tappedSide == 4){
 		Play("clickhigh")
 		flickrSpeed++
 	}
-	else if(TappedSide == 5){
+	else if(tappedSide == 5){
 		Play("kap")		
 		flickrSpeed--
-		if(flickrSpeed<1) flickrSpeed = 1
+		if(flickrSpeed < 1) flickrSpeed = 1
 	}
-	else if(TappedSide == 2 || TappedSide == 3){
+	else if(tappedSide == 2 || tappedSide == 3){
 		songIndex++
-		if(songIndex>5) songIndex = 0
+		if(songIndex > 5) songIndex = 0
 		Quiet()
 	}
 	saveState()
@@ -151,6 +151,6 @@ playSong(){ //rotates song depending on index
 logAccelerometerDataAndColors(loopCount){
 	if(loopCount % LOG_FREQUENCY == 0) { //logs once every 100 loops...
 		printf("raw (x,y,z) data: (%d, %d, %d)   ", data[0], data[1], data[2])
-		printf("calculated rgb:  (%d, %d, %d)  \r\n", red,green,blue)
+		printf("calculated rgb:  (%d, %d, %d)  \r\n", red, green, blue)
 	}	
 }
