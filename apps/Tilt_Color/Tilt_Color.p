@@ -109,26 +109,24 @@ validate(color) {
 }
 
 consumeTaps(tappedSide) {
-	if(tappedSide == 1) 
-	{
+	if(tappedSide == 1) {
 		Play("clickhigh")
 		flickrPhaseMultiplier++
 	}
-	else if(tappedSide == 0)								
-	{
+	else if(tappedSide == 0) {
 		Play("kap")		
 		flickrPhaseMultiplier--
 	}
-	else if(tappedSide == 4){
-		Play("percussions")
+	else if(tappedSide == 4) {
+		Play("woodblock")
 		flickrSpeed++
 	}
-	else if(tappedSide == 5){
+	else if(tappedSide == 5) {
 		Play("drip")		
 		flickrSpeed--
 		if(flickrSpeed < 1) flickrSpeed = 1
 	}
-	else if(tappedSide == 2 || tappedSide == 3){
+	else if(tappedSide == 2 || tappedSide == 3) {
 		songIndex++
 		if(songIndex >= SONG_MAX) songIndex = 0
 		Quiet()
