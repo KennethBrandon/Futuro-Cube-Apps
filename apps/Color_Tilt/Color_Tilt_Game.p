@@ -12,31 +12,20 @@ Try to match the color in the middle
 new icon[] = [ICON_MAGIC1, ICON_MAGIC2, 1, 3, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, 0x050555, 0x6666ff, ''warning2'',''warning2'', ''Color Tilt'', ''By: Kenneth Brandon'', ''Tilt the cube to change to color, tap the sides to change animation and music''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
 
 new data[3] //holds accelerometer data
-
-new red = 0 
-new green = 0
-new blue = 0
-
-new flickrPhaseMultiplier = 55 //14 //index to modulate the flicker animation
-new flickrSpeed = 15 //9 // index to change speed of flicker
+new rgb [3] //holds rgb color for the tilt color
+new colorToFind[3] //holds rgb color for the target color in the middle of each side
 new songIndex = 1
-
-new colorTiltVar[] = [VAR_MAGIC1, VAR_MAGIC2, ''color_tilt'']
-new storedVariables[3] //to hold current animation pattern between app uses
-
-new colorToFind[3]
 
 main() {
 	ICON(icon)
-	RegisterVariable(colorTiltVar)
 	RegAllSideTaps()
 	getRandomColor()
 	new loopCount = 0
-	for(;;)  				//Main Loop!!
+	for(;;) //Main Loop!!
 	{
 		Sleep()	//Sleep between loops.
 
-		if(IsPlayOver()) playSong() ///If the music stops, start it again
+		if(IsPlayOver()) playSong() //If the music stops, start it again
 
 		if(Motion()) consumeTaps(eTapSide()) //if there is motion then we deal with the motion
 		
@@ -58,53 +47,52 @@ main() {
 	}	
 }
 
-isColorMatch(){
-	return abs(colorToFind[0] - red) < COLOR_ACCURACY && abs(colorToFind[1] - green) < COLOR_ACCURACY && abs(colorToFind[2] - blue) < COLOR_ACCURACY 
+isColorMatch(){  //returns true if each channel is less than the COLOR_ACCURACY value
+	return abs(colorToFind[0] - rgb[0]) < COLOR_ACCURACY && abs(colorToFind[1] - rgb[1]) < COLOR_ACCURACY && abs(colorToFind[2] - rgb[2]) < COLOR_ACCURACY 
 }
 
 animateColorMatch(){
 	new i = 0
-	for(i=0; i<80; i++){
+	for(i = 0; i < 80; i++){
 		Sleep()
 		SetRgbColor(colorToFind[0], colorToFind[1], colorToFind[2])
 		new j = 0
-		for (j=0; j<54; j++)
+		for (j = 0; j < 54; j++)
 		{
-			DrawFlicker(_w(j), flickrSpeed, FLICK_STD, flickrPhaseMultiplier)
+			DrawFlicker(_w(j), 15, FLICK_STD, 55)
 		}
 		PrintCanvas()
 	}
 }
 
 calculateColorFromData() {
-	red = (data[0] + 255) / 2   //calculate rgb colors from accelerometer data
-	green = (data[1] + 255) / 2
-	blue = (data[2] + 255) / 2
+	rgb[0] = (data[0] + 255) / 2   //calculate rgb colors from accelerometer data
+	rgb[1] = (data[1] + 255) / 2
+	rgb[2] = (data[2] + 255) / 2
 
 	//darkens colors a bit as they were too white
-	red = red - 25 //don't darken red as much because red seemed dimmer than green and blue
-	green = green - 45 
-	blue = blue - 45
+	rgb[0] = rgb[0] - 25 //don't darken red as much because red seemed dimmer than green and blue
+	rgb[1] = rgb[1] - 45 
+	rgb[2] = rgb[2] - 45
 
-	red = validate(red)
-	blue = validate(blue)
-	green = validate(green)
+	rgb[0] = validate(rgb[0])
+	rgb[1] = validate(rgb[1])
+	rgb[2] = validate(rgb[2])
 }
 
 drawCube() {
 	SetIntensity(255)
-	SetRgbColor(red, green, blue)
+	SetRgbColor(rgb[0], rgb[1], rgb[2])
 	DrawCube() //draws cube
 
 	//draws centers
 	SetRgbColor(colorToFind[0], colorToFind[1], colorToFind[2])
-	DrawPoint(_w(0,4))
-	DrawPoint(_w(1,4))
-	DrawPoint(_w(2,4))
-	DrawPoint(_w(3,4))
-	DrawPoint(_w(4,4))
-	DrawPoint(_w(5,4))
-
+	DrawPoint(_w(0, 4))
+	DrawPoint(_w(1, 4))
+	DrawPoint(_w(2, 4))
+	DrawPoint(_w(3, 4))
+	DrawPoint(_w(4, 4))
+	DrawPoint(_w(5, 4))
 	PrintCanvas() //turns on leds
 }
 
@@ -115,7 +103,7 @@ validate(color) {
 }
 
 consumeTaps(tappedSide) {
-	printf("[%d,%d,%d]\r\n",red,green,blue) //used to find colors found in getRandomColor
+	printf("[%d,%d,%d]\r\n", rgb[0], rgb[1], rgb[2]) //used to find colors found in getRandomColor
 	songIndex++
 	if(songIndex >= SONG_MAX) songIndex = 0
 	Quiet()
@@ -157,11 +145,11 @@ getRandomColor(){
 			case 16: colorToFind = [19,140,150]
 			case 17: colorToFind = [136,202,86]
 			case 18: colorToFind = [143,0,76]
-			// case 19: colorToFind = [154,0,33]  //commenting out these so that it will compile and upload into RAM
-			// case 20: colorToFind = [97,200,38]
-			// case 21: colorToFind = [70,165,165]
-			// case 22: colorToFind = [83,27,191]
-			// case 23: colorToFind = [188,32,9]
+			case 19: colorToFind = [154,0,33]  
+			case 20: colorToFind = [97,200,38]
+			case 21: colorToFind = [70,165,165]
+			case 22: colorToFind = [83,27,191]
+			case 23: colorToFind = [188,32,9]
 		}
 	}
 }
