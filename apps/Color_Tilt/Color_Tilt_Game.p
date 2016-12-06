@@ -46,9 +46,8 @@ main() {
 
 		calculateColorFromData()
 
-		logAccelerometerDataAndColors(loopCount)
-
 		if(isColorMatch()){
+			Play("warning2")
 			animateColorMatch()
 			getRandomColor()
 		}
@@ -64,12 +63,6 @@ isColorMatch(){
 }
 
 animateColorMatch(){
-	printf("MATCH!!\r\n")
-	printf("\r\n")
-	printf("Color color:   (%d, %d, %d)\r\n", red, green, blue)
-	printf("Color To find: (%d, %d, %d)\r\n", colorToFind[0], colorToFind[1], colorToFind[2])
-	printf("Color diff...: (%d, %d, %d)\r\n" , red - colorToFind[0], green - colorToFind[1], blue - colorToFind[2])
-	Play("warning2")
 	new i = 0
 	for(i=0; i<80; i++){
 		Sleep()
@@ -115,14 +108,6 @@ drawCube() {
 	PrintCanvas() //turns on leds
 }
 
-drawFlicker() {
-	new j = 0
-	for (j=0; j<54; j++)
-	{
-		DrawFlicker(_w(j), flickrSpeed, FLICK_STD, j * flickrPhaseMultiplier)
-	}
-}
-
 validate(color) {
 	if(color < 0) color = 0	//values can be below zero and greater that 255 when more force than gravity is acting on the cube
 	if(color > 255) color = 255
@@ -139,20 +124,8 @@ consumeTaps(tappedSide) {
 playSong() { //rotates song depending on index
 	switch(songIndex){
 		case 0: Quiet()
-		case 1: Play("COMEANDFIND")
+		case 1: Play("COMEANDFIND") //removed a bunch of songs found in color_tilt
 	}
-}
-
-logAccelerometerDataAndColors(loopCount) {
-	if(loopCount % LOG_FREQUENCY == 0) { //logs once every 100 loops...
-		printf("raw (x,y,z) data: (%d, %d, %d)   ", data[0], data[1], data[2])
-		printf("calculated rgb:  (%d, %d, %d)\r\n", red, green, blue)
-		printf("New Color To find: (%d, %d, %d)\r\n", colorToFind[0], colorToFind[1], colorToFind[2])
-		printf("Color diff...:  (%d, %d, %d) \r\n" , red - colorToFind[0], green - colorToFind[1], blue - colorToFind[2])
-		if(isColorMatch()) {
-			printf("Color Match!!!\n");
-		}
-	}	
 }
 
 // getRandomColor(){
@@ -184,7 +157,7 @@ getRandomColor(){
 			case 16: colorToFind = [19,140,150]
 			case 17: colorToFind = [136,202,86]
 			case 18: colorToFind = [143,0,76]
-			// case 19: colorToFind = [154,0,33]
+			// case 19: colorToFind = [154,0,33]  //commenting out these so that it will compile and upload into RAM
 			// case 20: colorToFind = [97,200,38]
 			// case 21: colorToFind = [70,165,165]
 			// case 22: colorToFind = [83,27,191]
