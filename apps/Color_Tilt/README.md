@@ -1,5 +1,7 @@
 # Color Tilt / Color Tilt Game
 ##### By: Kenneth Brandon December 2016
+This directory has 2 apps: Color Tilt, and Color Tilt Game.  They both read in accelerometer data and change the color of the cube. Below you will find info on both apps:
+
 ## Color Tilt Game:
 Turning the cube will change the cube's color. **Try to match the center color.**
 
