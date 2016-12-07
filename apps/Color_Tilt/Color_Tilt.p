@@ -20,6 +20,9 @@ new flickrPhaseMultiplier = 14 //index to modulate the flicker animation
 new flickrSpeed = 9 // index to change speed of flicker
 new songIndex = 1
 
+new showAxes = false
+new tapCounter = 0
+
 new colorTiltVar[] = [VAR_MAGIC1, VAR_MAGIC2, ''color_tilt'']
 new storedVariables[3] //to hold current animation pattern between app uses
 
@@ -91,7 +94,26 @@ drawCube() {
 	SetRgbColor(red, green, blue)
 	DrawCube()
 	drawFlicker()
+	if(showAxes) drawAxes()
 	PrintCanvas()
+}
+
+drawAxes(){
+	SetRgbColor(red, 0, 0) //draws red component only on the red axis
+	DrawPoint(0)
+	DrawPoint(1)
+	DrawPoint(42)
+	DrawPoint(43)
+	SetRgbColor(0, green, 0) //draws green component only on the green axis
+	DrawPoint(5)
+	DrawPoint(8)
+	DrawPoint(30)
+	DrawPoint(33)
+	SetRgbColor(0, 0, blue) //draws blue component only on the blue axis
+	DrawPoint(28)
+	DrawPoint(29)
+	DrawPoint(38)
+	DrawPoint(41)
 }
 
 drawFlicker() {
@@ -109,6 +131,17 @@ validate(color) {
 }
 
 consumeTaps(tappedSide) {
+	if(!GetTimer(0)){
+		SetTimer(0,1000)
+		tapCounter = 1
+	}
+	else{
+		tapCounter ++;
+	}
+	if(tapCounter == 3) { //tapped 3 times within 1 second
+		showAxes = !showAxes
+	}
+
 	if(tappedSide == 1) {
 		Play("clickhigh")
 		flickrPhaseMultiplier++

@@ -15,6 +15,8 @@ new data[3] //holds accelerometer data
 new rgb [3] //holds rgb color for the tilt color
 new colorToFind[3] //holds rgb color for the target color in the middle of each side
 new songIndex = 1
+new showAxes = false
+new tapCounter = 0
 
 main() {
 	ICON(icon)
@@ -85,6 +87,8 @@ drawCube() {
 	SetRgbColor(rgb[0], rgb[1], rgb[2])
 	DrawCube() //draws cube
 
+	if(showAxes) drawAxes()
+
 	//draws centers
 	SetRgbColor(colorToFind[0], colorToFind[1], colorToFind[2])
 	DrawPoint(_w(0, 4))
@@ -95,7 +99,23 @@ drawCube() {
 	DrawPoint(_w(5, 4))
 	PrintCanvas() //turns on leds
 }
-
+drawAxes(){
+	SetRgbColor(rgb[0], 0, 0) //draws red component only on the red axis
+	DrawPoint(0)
+	DrawPoint(1)
+	DrawPoint(42)
+	DrawPoint(43)
+	SetRgbColor(0, rgb[1], 0) //draws green component only on the green axis
+	DrawPoint(5)
+	DrawPoint(8)
+	DrawPoint(30)
+	DrawPoint(33)
+	SetRgbColor(0, 0, rgb[2]) //draws blue component only on the blue axis
+	DrawPoint(28)
+	DrawPoint(29)
+	DrawPoint(38)
+	DrawPoint(41)
+}
 validate(color) {
 	if(color < 0) color = 0	//values can be below zero and greater that 255 when more force than gravity is acting on the cube
 	if(color > 255) color = 255
@@ -104,7 +124,18 @@ validate(color) {
 
 consumeTaps(tappedSide) {
 	printf("[%d,%d,%d]\r\n", rgb[0], rgb[1], rgb[2]) //used to find colors found in getRandomColor
+	printf("GetTimer(0): %d", GetTimer(0))
 	songIndex++
+	if(!GetTimer(0)){
+		SetTimer(0,1000)
+		tapCounter = 1
+	}
+	else{
+		tapCounter ++;
+	}
+	if(tapCounter == 3) { //tapped 3 times within 1 second
+		showAxes = !showAxes
+	}
 	if(songIndex >= SONG_MAX) songIndex = 0
 	Quiet()
 }
