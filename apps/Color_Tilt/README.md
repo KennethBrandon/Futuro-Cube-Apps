@@ -27,7 +27,7 @@ The X accelerometer turns into red, Y into green, and Z into blue. When X axis i
 #### Easter Egg:
 Tap any side 3 times quickly and the red axis will only show the red channel, the green axis will show only the green channel, and the blue axis will show only the blue channel. This will allow you to better understand how the colors are mixed.
 
-#### Changing the animatin and music
+#### Changing the animation and music
 * Tapping on opposite sides 0 and 1 speedup/slowdown the animation. (Woodblock/Drip sounds)
 * Tapping on opposite sides 2 and 3 change the phase of the animation. (Click/BubblePop sounds)
 * Tapping on opposite sides 4 and 5 will transition through 15 songs and silence.
