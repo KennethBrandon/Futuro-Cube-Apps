@@ -63,6 +63,8 @@ animateColorMatch(){
 		{
 			DrawFlicker(_w(j), 15, FLICK_STD, 55)
 		}
+
+		if(showAxes) drawAxes()
 		PrintCanvas()
 	}
 }
