@@ -47,6 +47,6 @@ This is a musical app that plays the same sounds as the default piano app but th
  * Tap Side 5: High A#
  * Tap Side 6: High B
 
-###Todo
+### Todo
 * Add Shake for Settings
 * Add a way to choose between multiple instruments

@@ -3,10 +3,10 @@
 ##### Modified from: [example_5_animated_rubiks.p](http://www.futurocube.com/sdk/)
 ##### Modifications By: Kenneth Brandon  
 
-###Installing
+### Installing
 Unlike the other apps, this one must be installed using the [.zip file](releases/Rubiks_Cube_1_3.zip) found in the [releases folder](releases).  Using Rubik's Futuro Cube Suite, just and drop the zip on the side you want the app to go.
 
-###Packaging
+### Packaging
 To package this app you need to zip the RUBIKS CUBE folder with the .amx file.
 
 Note- There must be no hidden files in the zip file.

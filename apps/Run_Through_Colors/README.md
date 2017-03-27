@@ -9,9 +9,9 @@ This program lights up all the LEDs and animates smothley though the colors whil
 * Tapping on an oposite side will slow it down.
 
 ### Notes:
-####Color Transition: 	
-``` 
-Black -> Red -> Yellow -> Green -> Teal -> Blue -> Purple -> 
-	 Red -> Yellow -> Green -> Teal -> Blue -> Purple -> 
+#### Color Transition: 	
+```
+Black -> Red -> Yellow -> Green -> Teal -> Blue -> Purple ->
+	 Red -> Yellow -> Green -> Teal -> Blue -> Purple ->
 	 Red -> Yellow -> Green -> Teal -> Blue -> Purple -> and on and on.
 ```
