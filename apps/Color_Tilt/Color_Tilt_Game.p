@@ -14,7 +14,7 @@ Added timing
 #define FREE_PLAY 0
 #define PLAY 1
 #define GAME_LENGTH 20000 // 20s
-#define AWARDED_TIME 1000 //1s
+#define AWARDED_TIME 1500 //1s
 
 new icon[] = [ICON_MAGIC1, ICON_MAGIC2, 1, 3, 0x6666ff, 0x6666ff, 0x6666ff, 0x6666ff, 0xCC003300, 0x6666ff, 0x6666ff, 0x6666ff, 0x6666ff, ''warning2'',''warning2'', ''Color Tilt'', ''By: Kenneth Brandon'', ''Tilt the cube to change to color. Try to match the color in the middle''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
 
