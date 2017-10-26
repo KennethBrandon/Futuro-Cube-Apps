@@ -4,7 +4,7 @@ This program will let you change colors by tilting the cube.
 Try to match the color in the middle
 
 Updated Ocotber 2017
-Added timing
+Added timing and high scores
 */
 
 #include <futurocube>
