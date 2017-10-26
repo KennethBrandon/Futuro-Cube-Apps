@@ -16,7 +16,7 @@ Added timing
 #define GAME_LENGTH 20000 // 20s
 #define AWARDED_TIME 1500 //1s
 
-new icon[] = [ICON_MAGIC1, ICON_MAGIC2, 1, 3, 0x6666ff, 0x6666ff, 0x6666ff, 0x6666ff, 0xCC003300, 0x6666ff, 0x6666ff, 0x6666ff, 0x6666ff, ''warning2'',''warning2'', ''Color Tilt'', ''By: Kenneth Brandon'', ''Tilt the cube to change to color. Try to match the color in the middle''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
+new icon[] = [ICON_MAGIC1, ICON_MAGIC2, 1, 3, 0x6666ff, 0x6666ff, 0x6666ff, 0x6666ff, 0xCC003300, 0x6666ff, 0x6666ff, 0x6666ff, 0x6666ff, ''warning2'',''warning2'',ICON_MAGIC3,''Color Tilt'',1,0,SCORE_BEST_IS_MAX|SCORE_PRIMARY_POINTS] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
 
 new data[3] //holds accelerometer data
 new rgb [3] //holds rgb color for the tilt color
@@ -63,18 +63,30 @@ startGame(){
 }
 
 gameOver(){
-	gameState = FREE_PLAY
 	Play("uff")
     WaitPlayOver()
+	checkHighScore()
+
 	Play("_s_SCOREIS")
     WaitPlayOver()
+
 	playNumber(colorsFound)
     WaitPlayOver()
+
 	Play("_g_TAPTOSTART")
+	gameState = FREE_PLAY
 
 	printf("GAME OVER!!! Colors found: %d\n", colorsFound)
 }
-
+checkHighScore(){
+	new scoreVar = SetScore(CMD_SET_BEST_SCORE,colorsFound)
+	printf("High score var: %d\n", scoreVar)
+	if (scoreVar==1) {
+		//checks if high score!
+		printf("High Score!! %d\n", colorsFound)
+		if(colorsFound>0) AnnounceBestScore()
+	}
+}
 checkForColorMatch(){
 	if(isColorMatch()){
 		colorsFound++
@@ -225,7 +237,7 @@ getRandomColor(){
 playNumber(number){
     new string[4]
     snprintf(string,4,"%d",number%10)
-    if(number<19)
+    if(number<20)
     {
         snprintf(string,4,"%d",number)
         Play(string)  
