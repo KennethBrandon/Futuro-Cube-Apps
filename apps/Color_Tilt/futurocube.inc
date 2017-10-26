@@ -1,5 +1,5 @@
 #pragma library -
-//version of futurocube.inc ... 1.3    21.06.2013
+//version of futurocube.inc ... 3.0    8.10.2014, API ver 4
 
 //DS
 //\section{API-Native functions}
@@ -476,6 +476,10 @@ native RotateCanvasRGB(r,g,b)=-35;
 #define TAP_ZPLUS          13
 #define TAP_ZMINUS       14
 #define TAP_DOUBLE       15
+//API VER 4
+#define FORWARD_ROLL	 17
+#define CUBE_CONFIRM	 18
+#define DCUBE_CONFIRM	 19		
 
 //DS
 //\subsection{RegMotion}
@@ -1521,7 +1525,7 @@ native Vibrate(msec=100)=-220;
 
 #define ICON_MAGIC1  0x78948396
 #define ICON_MAGIC2  0xAABBEEDD
-
+#define ICON_MAGIC3  0x125BBC25
 
 //DS
 //\subsection{ICON}
@@ -1755,4 +1759,280 @@ native ApiVer()=-250;
 //DE
 
   
+
+//NEW API#2
+
+
+//check example sscanf_example.p
+//implentation of classic sscanf function 
+native sscanf(const s[], const format[], {Fixed,_}:...)=-222;
+
+//check example sscanf_example.p
+//this function allows SHELL to communicate with current
+//running script. Check the example above to see how it works
+native GetShellMsg(dest[],packed=0, sizedest=sizeof dest)=-223;
+
+//start application-script by its name 
+//in new ICON definition there is also mandatory to have script name
+//in SHELL you can also use new command "pstart NAME" to run the
+//script with given NAME
+native StartApp(app_name{})=-225;
+
+//gets the charging state same as used to display during charging procedure
+//when USB is connected, valid charging state is computed from the actuall charge 
+//current, outputs are numbers from <0..4> (empty to full)
+//note that this is valid only when USB is connected. Also note that maximum
+//current into the cube is 500mA, if anyone replace the charger with an application
+//consumes too much energy, charging might not finished as expected.   
+native GetChargingState()=-224;
+
+//gets the actuall battery (or system voltage) when USB is disconnected,
+//if USB is connected, this output is little bigger than real voltage
+//on battery. This is due to the dynamic power path management and charging.
+native GetSystemVoltage()=-226;
+
+//this function returns 1 if the USB is connected and battery is charging
+//if USB is connected, use GetChargingState() to get info about charging
+//if USB is disconnected, use GetSystemVoltage() to get real state of battery
+native IsUsbConnected()=-227;
+
+//Starts playing a file on requested channel, channel is <0..3>
+native PlayAtCh(channel,song{})=-159;
+
+//Change volume on requested channel, channel is <0..3>, volume <0..255>
+//At the start of script, all channels have volumes on 255
+native SetChVolume(channel, volume)=-160;
+
+//Stop actuall song on requested channel, channel is <0..3>
+//TODO, erase all songs at same channel from the queue
+native StopPlayAtCh(channel)=-162;
+
+//Check if the channel song finishes, returns 1 if the play is over.
+native IsPlayAtChOver(channel)=-161;
+
+//Set the search preferences to the requested folder. I.e. if some song is
+//requested to play, first search is done in this folder, if exists. If the
+//file is not found, other folders are searched.
+//When the script start, cube automatically tries to mount the folder, that
+//has the same name as the script. (defined in ICON)
+//function returns:
+//     0 - not found
+//number - amount of available files in actuall mounted and preffered folder 
+native MountFolder(folder{})=-163;
+
+//returns amount of available files in actuall mounted and preffered folder 
+native GetNumberOfFiles()=-164
+
+//This function plays on requested channel <0..3> n-th file on the actuall 
+//mounted and preffed folder. If the n-th file is not found, it is then searched
+//and played in others folders as well. Very good example is mplay.p
+//To avoid playing files from different folders (if not requested),
+//simply use MountFolder() follow by check of number of files, GetNumberOfFiles()
+//nth file is <1..GetNumberOfFiles()>   
+native PlayAtChNthFile(channel, nth_file)=-165
+
+//for all RADIO API, please look at rf_example.p
+
+//starts radio pairing with the "name", in order to connect
+//two cubes these "name" must be at both cubes same, otherwise
+//cubes will not pair and rf link will not be created 
+//Maximum lenght of the name is 34 characters
+//If the connection suceeds, script continues, if not,
+//script is stopped.
+native RadioInit(name{})=-180;
+
+//Sends formatted messages to other cube. Maximum 35 characters,
+//if the final message would be bigger, it is internally cropped.
+native RadioMessage(const format[], {Fixed,_}:...)=-181;
+
+//There is 5 messages queue for TX and RX, both following
+//functions returns either available space or used space
+//in rx and tx queues. 
+native IsRadioMsgWritable()=-182;
+native IsRadioMsgReadable()=-183;
+
+//Convert cell array into byte stream and sends it to other cube.
+//Note that one cells is converted into one byte! That means
+//if the cell for example 0xABCD, only 0xCD will be send.
+//Maximum lenght is 35, internally cropped.
+//returns size of written bytes. If not in binary mode,
+//any zero data is interpretred as end of string. And
+//the message is shortened. If this happens to first
+//byte, no message is send. For binary transfer,
+//RadioSetBinary() must be called. See the rf_acc_stream.p
+native RadioMsgWrite(data[],size=sizeof data)=-184;
+
+//Reads message from other cube into cell array.
+//Returns number of read bytes (cells)
+//Same rules with zero characters are applied.
+native RadioMsgRead(data[],size=sizeof data)=-185;
+
+//If 2 cubes are connected, one them has order "0"
+//and the other one has order "1", they never have
+//same order
+native RadioGetOrder()=-186;
+
+//This number is RF session ID that both cubes have same,
+//This number can be for example used to seed random generator
+//with same number at both cubes. Note that if you want to
+//use this feature, you should use SetRandomizeFlag(0)
+native RadioGetSessionID()=-187;
+
+//This event is generated (return 1) if the cube connection is lost
+native RadioIsLost()=-188;  
+
+//This is experimental setting that can be used when the connection
+//is established. It can make the radio communicates faster.
+//The fastest available setting is RadioSetDelay(10,30) 
+native RadioSetDelay(delay,window)=-189;
+
+//This function must be used only after connection is established
+//and it allows to use full binary mode. In this mode each RF message
+//contains 35 bytes and restriction is only that first byte must
+//not be zero at all cases!!!! Check example rf_acc_stream.p
+native RadioSetBinary()=-190;
+
+
+//API ver 3
+native shell(const cmd[])=-248;
+
+//API ver 4
+
+//SCORE
+//score flags
+//Each game score behaviour is defined by its score flag in its ICON
+//example:
+//new icon[]=[ICON_MAGIC1,ICON_MAGIC2,2,1,I2,0,I2,0,I2,0,I2,0,I2,'''','''',ICON_MAGIC3,''score_game'',1,3,SCORE_BEST_IS_MAX|SCORE_PRIMARY_POINTS]
+//etc....
+
+#define SCORE_BEST_IS_MAX			  (1<<0)            //ether this or next option is possible
+#define SCORE_BEST_IS_MIN			  (1<<1)            //this bit decides how the compare value is compared 
+#define SCORE_PRIMARY_POINTS	  (1<<2)            //either is or next one
+#define SCORE_PRIMARY_TIME	    (1<<3)            //points or time decision of the primary value
+#define SCORE_SECONDARY_POINTS	(1<<4)            //either is or next one
+#define SCORE_SECONDARY_TIME	  (1<<5)            //points or time decision of the primary value
+                                                  //if none of the secondary is used, compare value is automatically
+                                                  //copied to primary value
+//..
+#define SCORE_DISP_SECONDARY    (1<<8)            //server should display secondary value, primary is displayed always
+#define SCORE_DISP_LEVELS       (1<<9)            //server should display levels
+#define SCORE_DISP_ACHIEVEMENTS (1<<10)           //server should display achievemts - NOT IMPLEMENTED ON SERVER AND CUBE
+#define SCORE_DISP_RES1         (1<<11)           //server should display RES1  - NOT IMPLEMENTED ON SERVER AND CUBE
+#define SCORE_DISP_RES2         (1<<12)           //server should display RES2  - NOT IMPLEMENTED ON SERVER AND CUBE
+#define SCORE_DISP_SEED         (1<<13)           //server should display SEED  - NOT IMPLEMENTED ON CUBE, SERVER WILL DISPLAY
+#define SCORE_DISP_CMPVALUE     (1<<13)           //NOT IMPLEMENTED ON SERVER AND CUBE, server should display compare value - for rare cases
+                                                  //in this cases compare value should preceeds primary value
+                                                  
+#define SCORE_DISP_PTIME_MS     (1<<24)           //server should display primary time, if time with miliseconds
+                                                  //i.e. 15:25.256 instead of default 15:25
+#define SCORE_DISP_STIME_MS     (1<<25)           //same for secondary
+
+//This function is used to store a score value in non-volatile
+//memory. It does automatic comparison to score type and returns
+//value to determine next action:
+//0 - score was accepted, but it is not written at the table
+//1 .. n - score was accepted on n-th position in your profile, i.e. 1 is the best
+
+//errors:
+//-1 - score was not accepted, since script has no correct attributes
+//-2 - score type mismatch with script attributes
+//-3 - script attrinbutes are not consistente
+//-4 - score type is not supported
+// ... 
+//-100 - script name is zero length
+//-101 - score list is full
+//-102 - score variable WRITE has failed
+//-103 - unknown error
+//-xxx - unknown error
+//-1000
+//-1001
+#define CMD_SET_ACTUAL_LEVEL             0        //values 0 to 255
+#define CMD_SET_ACTUAL_ACHIEVEMENTS      1        //values with bits 0..23
+#define CMD_SET_ACTUAL_SEED              2        //32 bit seed for any purposes
+                                                  //as example for puzzles that are
+                                                  //mixed according to some seed, this
+                                                  //can be stored in the SEED parameter
+//...
+#define CMD_SET_RES1                    10        //reserved value for any purpose
+#define CMD_SET_RES2                    11        //reserved value for any purpose
+//...
+#define CMD_SET_BEST_SCORE              100       //value, primary and secondary will be inserted
+                                                  //comparison is made according to flags
+                                                  //in case that only primary values are used
+                                                  //than it is enough to fill value and primary will
+                                                  //be copied automatically, therefore easiest use:
+                                                  //SetScore(CMD_SET_BEST_SCORE,125)
+
+//NOTE!!!!!!!!!!!!
+//When score is accepted, it stores to its values currently set level, Achievements and Seed!
+//Therefore is important to set up those values prior to score insertion!
+//Also cube checks how often is the command SetScore used, if more than 5 times per second
+//access will be denied, command is designed to be used only as less as possible
+//Good design is to change levels and achievements or RES1 .. RES2 etc.. only when 
+//really needed. Command does access to flash memory and to database and it consumes time
+//as well. 
+//NOTE!!!!!!!!!!!!
+
+//examples:
+//SetScore(CMD_SET_RES1,5)                  //sets reserved1 to 5   .... reading of that will be implemented soon
+//SetScore(CMD_SET_ACTUAL_LEVEL,5)          //sets actuall level to 5 .... reading of that will be implemented soon
+//SetScore(CMD_SET_BEST_SCORE,125)          //primary value is automatically compare value
+//SetScore(CMD_SET_BEST_SCORE,125,568)      //primary is 125, 568 is secondary
+
+native SetScore(score_cmd, value, primary=0, secondary=0) = -130
+
+
+//...
+//NEXT LINES NOT IMPLEMENTED YET
+//NEXT LINES NOT IMPLEMENTED YET
+//NEXT LINES NOT IMPLEMENTED YET
+//NEXT LINES NOT IMPLEMENTED YET
+//#define CMD_GET_ACTUAL_LEVEL             0
+//#define CMD_GET_ACTUAL_ACHIEVEMENTS      1
+//#define CMD_GET_ACTUAL_SEED              2
+//...
+//#define CMD_GET_RES1                     10
+//#define CMD_GET_RES2                     10
+//...
+//#define CMD_GET_n1_SCORE                 100
+//#define CMD_GET_n2_SCORE                 101
+//#define CMD_GET_n3_SCORE                 102
+//#define CMD_GET_n4_SCORE                 103
+//#define CMD_GET_n5_SCORE                 104
+//...
+//#define CMD_GET_BEST_OVERALL_SCORE       1000
+//...
+
+
+//sets active profile 0..3 (player 1..4)
+//returns 1 - OK
+//returns 0 - failed or wrong parameters
+native SetActiveProfile(profile=0) = -132
+
+//returns active profile 0..3 (player 1..4) 
+native GetActiveProfile() = -133
+   
+//returns profile status 0..3 (player 1..4)
+//returns 0 - empty profile
+//returns 1 - active profile 
+native GetProfileStatus(profile=0) = -134
+
+//announces best score in std. way
+//later we plan to check if the last
+//score was best of all profiles
+native AnnounceBestScore() = -135
+
+//enables precise timing based on crystal oscilator
+//currently precise timing works in 100 ms resolution
+//i.e. all timers will be incremented or decremeneted
+//by 100ms - this will chamge in future
+native EnablePreciseTiming() = - 140
+   
+//there are three freely running incremental timers 0..3
+//those timers can not be paused like coundown timers
+native SetIncTimer(timer=0,value) = -141;
+native GetIncTimer(timer=0) = -142;
+
+//sets application ms time, opposit to GetMsecs
+native SetAppMsecs(value)=-143;
 

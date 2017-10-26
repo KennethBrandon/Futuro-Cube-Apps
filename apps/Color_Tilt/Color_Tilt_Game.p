@@ -2,32 +2,37 @@
 By: Kenneth Brandon Dec 2016
 This program will let you change colors by tilting the cube.
 Try to match the color in the middle
+
+Updated Ocotber 2017
+Added timing
 */
 
 #include <futurocube>
 #define LOG_FREQUENCY 500 // log once every 500 loops
 #define SONG_MAX 2//16
 #define COLOR_ACCURACY 20
+#define FREE_PLAY 0
+#define PLAY 1
+#define GAME_LENGTH 20000 // 20s
+#define AWARDED_TIME 1000 //1s
 
-new icon[] = [ICON_MAGIC1, ICON_MAGIC2, 1, 3, 0x6666ff, 0x6666ff, 0x6666ff, 0x6666ff, 0xCC003300, 0x6666ff, 0x6666ff, 0x6666ff, 0x6666ff, ''warning2'',''warning2'', ''Color Tilt'', ''By: Kenneth Brandon'', ''Tilt the cube to change to color, tap the sides to change animation and music''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
+new icon[] = [ICON_MAGIC1, ICON_MAGIC2, 1, 3, 0x6666ff, 0x6666ff, 0x6666ff, 0x6666ff, 0xCC003300, 0x6666ff, 0x6666ff, 0x6666ff, 0x6666ff, ''warning2'',''warning2'', ''Color Tilt'', ''By: Kenneth Brandon'', ''Tilt the cube to change to color. Try to match the color in the middle''] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
 
 new data[3] //holds accelerometer data
 new rgb [3] //holds rgb color for the tilt color
 new colorToFind[3] //holds rgb color for the target color in the middle of each side
-new songIndex = 1
-new showAxes = false
-new tapCounter = 0
+new gameState = FREE_PLAY
+new colorsFound = 0  //score
+new tapSoundLength = 1000 //starts at 1s per "tap" and as your run out of time the "tap" sound length gets smaller so the "taps" speed up
 
 main() {
 	ICON(icon)
+    EnablePreciseTiming() 
 	RegAllSideTaps()
-	getRandomColor()
-	new loopCount = 0
+	Play("_g_TAPTOSTART")
 	for(;;) //Main Loop!!
 	{
 		Sleep()	//Sleep between loops.
-
-		if(IsPlayOver()) playSong() //If the music stops, start it again
 
 		if(Motion()) consumeTaps(eTapSide()) //if there is motion then we deal with the motion
 		
@@ -36,26 +41,82 @@ main() {
 		ReadAcc(data)  //read in accelerometer data 
 
 		calculateColorFromData()
-
-		if(isColorMatch()){
-			Play("warning2")
-			animateColorMatch()
-			getRandomColor()
-		}
 		
 		drawCube()
 
-		loopCount++;
+		if(gameState == PLAY){
+			checkForColorMatch()
+			
+			checkTimeAndGameOver()
+		}
 	}	
+}
+
+startGame(){
+	gameState = PLAY
+	Play("ballhit")
+	colorsFound = 0  //resets to 0 found colors
+	tapSoundLength = 1000 //resets to 1 second between tap sounds
+	getRandomColor()
+	SetIncTimer(0,0) //our main game timer
+	SetTimer(0,tapSoundLength) //our tap timer. play tap every second to start
+}
+
+gameOver(){
+	gameState = FREE_PLAY
+	Play("uff")
+    WaitPlayOver()
+	Play("_s_SCOREIS")
+    WaitPlayOver()
+	playNumber(colorsFound)
+    WaitPlayOver()
+	Play("_g_TAPTOSTART")
+
+	printf("GAME OVER!!! Colors found: %d\n", colorsFound)
+}
+
+checkForColorMatch(){
+	if(isColorMatch()){
+		colorsFound++
+		printf("Colors found: %d \n", colorsFound)
+		Play("warning2")
+		animateColorMatch()
+		getRandomColor()
+	}
 }
 
 isColorMatch(){  //returns true if each channel is less than the COLOR_ACCURACY value
 	return abs(colorToFind[0] - rgb[0]) < COLOR_ACCURACY && abs(colorToFind[1] - rgb[1]) < COLOR_ACCURACY && abs(colorToFind[2] - rgb[2]) < COLOR_ACCURACY 
 }
 
-animateColorMatch(){
+checkTimeAndGameOver(){
+	new timeElapsed = GetIncTimer()
+	new actualGameLength = AWARDED_TIME*colorsFound +GAME_LENGTH;
+
+	if(timeElapsed > actualGameLength){
+		gameOver()
+	}
+	else if (timeElapsed>actualGameLength*8/10){
+		tapSoundLength = 200
+	}
+	else if (timeElapsed>actualGameLength*6/10){
+		tapSoundLength = 400
+	}
+	else if (timeElapsed>actualGameLength*4/10){
+		tapSoundLength = 600
+	}
+	else if (timeElapsed>actualGameLength*2/10){
+		tapSoundLength = 800
+	}
+	if(GetTimer(0)<=0){
+		Play("ballhit")   // plays tap sound
+		SetTimer(0,tapSoundLength)  //sets the timer for the next time to play the tap sound. 
+	}
+}
+
+animateColorMatch(){  //todo: integrate this with the drawCube method so the loops don't keep the tap sound timer from being played
 	new i = 0
-	for(i = 0; i < 80; i++){
+	for(i = 0; i < 40; i++){
 		Sleep()
 		SetRgbColor(colorToFind[0], colorToFind[1], colorToFind[2])
 		new j = 0
@@ -63,8 +124,6 @@ animateColorMatch(){
 		{
 			DrawFlicker(_w(j), 15, FLICK_STD, 55)
 		}
-
-		if(showAxes) drawAxes()
 		PrintCanvas()
 	}
 }
@@ -89,9 +148,21 @@ drawCube() {
 	SetRgbColor(rgb[0], rgb[1], rgb[2])
 	DrawCube() //draws cube
 
-	if(showAxes) drawAxes()
+	if(gameState == PLAY) drawCenters()
+	if(gameState == FREE_PLAY) drawFreePlayAnimation()
 
-	//draws centers
+	PrintCanvas() //turns on leds
+}
+
+drawFreePlayAnimation() {
+	new j = 0
+	for (j=0; j<54; j++)
+	{
+		DrawFlicker(_w(j), 15, FLICK_STD, j * 60)
+	}
+}
+
+drawCenters(){
 	SetRgbColor(colorToFind[0], colorToFind[1], colorToFind[2])
 	DrawPoint(_w(0, 4))
 	DrawPoint(_w(1, 4))
@@ -99,25 +170,8 @@ drawCube() {
 	DrawPoint(_w(3, 4))
 	DrawPoint(_w(4, 4))
 	DrawPoint(_w(5, 4))
-	PrintCanvas() //turns on leds
 }
-drawAxes(){
-	SetRgbColor(rgb[0], 0, 0) //draws red component only on the red axis
-	DrawPoint(0)
-	DrawPoint(1)
-	DrawPoint(42)
-	DrawPoint(43)
-	SetRgbColor(0, rgb[1], 0) //draws green component only on the green axis
-	DrawPoint(5)
-	DrawPoint(8)
-	DrawPoint(30)
-	DrawPoint(33)
-	SetRgbColor(0, 0, rgb[2]) //draws blue component only on the blue axis
-	DrawPoint(28)
-	DrawPoint(29)
-	DrawPoint(38)
-	DrawPoint(41)
-}
+
 validate(color) {
 	if(color < 0) color = 0	//values can be below zero and greater that 255 when more force than gravity is acting on the cube
 	if(color > 255) color = 255
@@ -126,39 +180,18 @@ validate(color) {
 
 consumeTaps(tappedSide) {
 	printf("[%d,%d,%d]\r\n", rgb[0], rgb[1], rgb[2]) //used to find colors found in getRandomColor
-	printf("GetTimer(0): %d", GetTimer(0))
-	songIndex++
-	if(!GetTimer(0)){
-		SetTimer(0,1000)
-		tapCounter = 1
+	if(gameState == FREE_PLAY){
+		startGame()
 	}
-	else{
-		tapCounter ++;
-	}
-	if(tapCounter == 3) { //tapped 3 times within 1 second
-		showAxes = !showAxes
-	}
-	if(songIndex >= SONG_MAX) songIndex = 0
 	Quiet()
 }
 
-playSong() { //rotates song depending on index
-	switch(songIndex){
-		case 0: Quiet()
-		case 1: Play("COMEANDFIND") //removed a bunch of songs found in color_tilt
-	}
-}
-
-// getRandomColor(){
-// 	colorToFind[0]= GetRnd(155)
-// 	colorToFind[1]= GetRnd(155)
-// 	colorToFind[2]= GetRnd(155)
-// 	printf("New Color To find: (%d, %d, %d)\r\n", colorToFind[0], colorToFind[1], colorToFind[2])
-// }
 getRandomColor(){
 	new lastRed = colorToFind[0]
 	while(abs(lastRed-colorToFind[0])<50){  // looping untill next color's red channel is at least 50 different
-		switch(GetRnd(19)){ //picked random colors that I tested are easily achievable
+		new randomNumber = GetRnd(25)
+		printf("Random color: %d\n",randomNumber );
+		switch(randomNumber){ //picked random colors that I tested are easily achievable
 			case 0: colorToFind = [194,4,78]
 			case 1: colorToFind = [117,36,0]
 			case 2: colorToFind = [207,138,48]
@@ -183,6 +216,61 @@ getRandomColor(){
 			case 21: colorToFind = [70,165,165]
 			case 22: colorToFind = [83,27,191]
 			case 23: colorToFind = [188,32,9]
+			case 24: colorToFind = [74,51,0]
 		}
+		printf("colorToFind: %d,%d,%d \n", colorToFind[0], colorToFind[1], colorToFind[2])
 	}
+}
+
+playNumber(number){
+    new string[4]
+    snprintf(string,4,"%d",number%10)
+    if(number<19)
+    {
+        snprintf(string,4,"%d",number)
+        Play(string)  
+        WaitPlayOver()
+    }
+    else if(number<100)
+    {
+        new Mod = number%10
+        
+        snprintf(string,4,"%d",number-Mod)
+        Play(string)
+        WaitPlayOver()
+        if(Mod!=0) 
+        {
+            snprintf(string,4,"%d",Mod)
+            Play(string)
+            WaitPlayOver()
+        }
+    }
+    else
+    {
+        new Mod100 = number%100
+        new Mod10 = Mod100%10
+        snprintf(string,4,"%d",number-Mod100)
+        Play(string)
+        WaitPlayOver()
+        if(Mod100!=0)
+        {               
+            if(Mod100<20) 
+            {
+                snprintf(string,4,"%d",Mod100)
+                Play(string)
+            }
+            else
+            {
+                snprintf(string,4,"%d",Mod100-Mod10)
+                Play(string)
+                WaitPlayOver()
+                if(Mod10!=0)
+                {
+                    snprintf(string,4,"%d",Mod10)
+                    Play(string)
+                    WaitPlayOver()
+                }
+            }
+        }
+    }
 }
