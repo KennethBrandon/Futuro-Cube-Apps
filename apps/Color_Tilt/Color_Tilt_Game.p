@@ -14,7 +14,7 @@ Added timing and high scores
 #define FREE_PLAY 0
 #define PLAY 1
 #define GAME_LENGTH 20000 // 20s
-#define AWARDED_TIME 1500 //1s
+#define AWARDED_TIME 1500 //1.5s
 
 new icon[] = [ICON_MAGIC1, ICON_MAGIC2, 1, 3, 0x6666ff, 0x6666ff, 0x6666ff, 0x6666ff, 0xCC003300, 0x6666ff, 0x6666ff, 0x6666ff, 0x6666ff, ''warning2'',''warning2'',ICON_MAGIC3,''Color Tilt'',1,0,SCORE_BEST_IS_MAX|SCORE_PRIMARY_POINTS] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
 
@@ -34,7 +34,7 @@ main() {
     {
         Sleep() //Sleep between loops.
 
-        if(Motion()) consumeTaps(eTapSide()) //if there is motion then we deal with the motion
+        if(Motion()) consumeTaps() //if there is motion then we deal with the motion
         
         AckMotion()
 
@@ -190,7 +190,7 @@ validate(color) {
     return color
 }
 
-consumeTaps(tappedSide) {
+consumeTaps() {
     printf("[%d,%d,%d]\r\n", rgb[0], rgb[1], rgb[2]) //used to find colors found in getRandomColor
     if(gameState == FREE_PLAY){
         startGame()
