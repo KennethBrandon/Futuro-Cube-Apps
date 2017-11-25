@@ -91,7 +91,7 @@ checkForColorMatch(){
     if(isColorMatch()){
         colorsFound++
         printf("Colors found: %d \n", colorsFound)
-        Play("warning2")
+        Play("found")
         animateColorMatch()
         getRandomColor()
     }
