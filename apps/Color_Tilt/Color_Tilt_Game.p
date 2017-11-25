@@ -28,7 +28,7 @@ new tapSoundLength = 1000 //starts at 1s per "tap" and as your run out of time t
 main() {
     ICON(icon)
     EnablePreciseTiming() 
-    RegAllSideTaps()
+    RegAllTaps()
     Play("_g_TAPTOSTART")
     for(;;) //Main Loop!!
     {
