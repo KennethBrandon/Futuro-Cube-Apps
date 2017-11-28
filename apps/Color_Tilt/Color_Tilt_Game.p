@@ -20,7 +20,7 @@ new icon[] = [ICON_MAGIC1, ICON_MAGIC2,
     1, 3, 
     0x6666ff, 0x6666ff, 0x6666ff, 
     0x6666ff, 0xCC003300, 0x6666ff, 
-    0x6666ff, 0x6666ff, 0x6666ff, ''color_tilt'',''color_t_description'',ICON_MAGIC3,''Color Tilt'',1,0,SCORE_BEST_IS_MAX|SCORE_PRIMARY_POINTS] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
+    0x6666ff, 0x6666ff, 0x6666ff, ''color_tilt'',''color_tilt_desc'',ICON_MAGIC3,''Color Tilt'',1,0,SCORE_BEST_IS_MAX|SCORE_PRIMARY_POINTS] //ICON_MAGIC1,ICON_MAGIC2,Menu Number,Side Number,9 cell colors,Name sound,Info/About/Description soundx
 
 new data[3] //holds accelerometer data
 new rgb [3] //holds rgb color for the tilt color
@@ -69,13 +69,18 @@ startGame(){
 gameOver(){
     Play("uff")
     WaitPlayOver()
+
     checkHighScore()
 
-    Play("_s_SCOREIS")
-    WaitPlayOver()
+    if (colorsFound) {
+      Score(colorsFound,SCORE_WINNER,1,0) //
+    }
+    Sleep(3000)
+    //Play("_s_SCOREIS")
+    //WaitPlayOver()
 
-    playNumber(colorsFound)
-    WaitPlayOver()
+    //playNumber(colorsFound)
+    //WaitPlayOver()
 
     Play("_g_TAPTOSTART")
     gameState = FREE_PLAY
@@ -238,6 +243,7 @@ getRandomColor(){
     }
 }
 
+/*
 playNumber(number){
     new string[4]
     snprintf(string,4,"%d",number%10)
@@ -290,3 +296,4 @@ playNumber(number){
         }
     }
 }
+*/
